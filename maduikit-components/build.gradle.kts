@@ -23,6 +23,7 @@ kotlin {
             api(project(":maduikit-theme"))
             api(compose.runtime)
             api(compose.ui)
+            api(compose.foundation) // Public row/box slots expose Foundation layout scopes.
             implementation("org.jetbrains.compose.material3:material3:1.9.0")
         }
     }

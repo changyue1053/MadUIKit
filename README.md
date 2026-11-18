@@ -7,7 +7,7 @@ or app entry point.
 | Module | Public API |
 | --- | --- |
 | `maduikit-theme` | `MadTheme`, `MadColors`, `MadColorDefaults` |
-| `maduikit-components` | `MadButton` |
+| `maduikit-components` | `MadButton`, `MadFilterTabs`, `MadFilterTab` |
 
 The source configures Android (min API 23), iOS ARM64 devices and iOS ARM64
 simulators. The iOS API is Kotlin/Compose, not a Swift-facing widget kit. This
@@ -71,3 +71,42 @@ fun ExampleAction(onConfirm: () -> Unit, canConfirm: Boolean) {
 localized labels and own business actions. For custom accents, specify both the
 accent and its contrasting text color. This sample staging command cannot
 satisfy an iOS consumer.
+
+### Controlled filter tabs
+
+`MadFilterTabs` and `MadFilterTab` are unstyled Compose primitives with
+grouped, selected/disabled tab semantics. The host owns selection, supplies
+accessible labels, and can render any indicator in the Box slot. Use
+one selected option and a suitably sized target; the components do not impose
+density, colors, text, or a minimum layout size.
+
+```kotlin
+enum class BookFilter { All, Favorites }
+
+@Composable
+fun BookFilters(selected: BookFilter, onSelect: (BookFilter) -> Unit) {
+    MadFilterTabs(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        MadFilterTab(
+            selected = selected == BookFilter.All,
+            onSelect = { onSelect(BookFilter.All) },
+            modifier = Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp),
+        ) { Text("All books", Modifier.align(Alignment.Center)) }
+        MadFilterTab(
+            selected = selected == BookFilter.Favorites,
+            onSelect = { onSelect(BookFilter.Favorites) },
+            modifier = Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp),
+        ) { Text("Favorites", Modifier.align(Alignment.Center)) }
+    }
+}
+```
+
+Do not add a second click target to a tab's content. Place independent
+actions outside the selectable group where the layout allows.
+
+The standalone synthetic Desktop smoke invokes actual pointer events and checks
+host-controlled selection and disabled behavior. It compiles only the relevant
+SDK source, leaving the SDK's published target set unchanged:
+
+```sh
+./gradlew -p smoke/filter-tabs-desktop run
+```

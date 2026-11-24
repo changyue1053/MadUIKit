@@ -1,6 +1,19 @@
 # Source-native S1 developer preview
 
-Source baseline: `aba1bebcdb3c6e1b64fbbc3774e9e4d3124ef249`. This source-only successor adds opt-in corner radii, border-width roles and `MadDivider` without changing existing controls or theme defaults. The reserved coordinate is `0.1.0-alpha09-sdk-preview01`; no Maven bundle has been published.
+Source baseline: `3ca8365c86be96594a4a8cbe83eb81ecb4efbf5a`. This source-only successor adds `MadActionButton` and `MadButtonVariant`. The reserved coordinate is `0.1.0-alpha10-sdk-preview01`; no Maven bundle has been published. Existing `MadButton` remains unchanged.
+
+## Button variants and loading
+
+Choose Primary (filled), Secondary (outlined), Text (unfilled), or Danger (error colors) explicitly. Supply a localized nonblank `label`. Set `loadingStatus` to null when idle or a localized nonblank string when loading. Loading or disabling suppresses activation; loading description and the decorative spinner remain during disabled+loading. The host updates state and owns business-layer deduplication; there is no internal queue or debounce. Do not add a second name or action through the modifier. Evidence is from Desktop Compose and Skia only, not native accessibility or device verification.
+
+```kotlin
+MadActionButton(
+    label = "Save", variant = MadButtonVariant.Primary,
+    onClick = requestSave,
+    loadingStatus = if (saving) "Saving" else null,
+)
+```
+
 
 ## Opt-in geometry roles
 
@@ -36,7 +49,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha09-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha10-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -75,7 +88,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha09-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha10-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

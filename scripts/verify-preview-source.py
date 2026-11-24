@@ -4,9 +4,11 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha09-sdk-preview01"
+VER = "0.1.0-alpha10-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
+    ("components", "MadButton"): "7d849b90677a58443f46ea6b62b31205f71d832988a979e9e2cf4d2de1db4cf0",
+    ("components", "MadActionButton"): "8211be630f24a9abe0ce5443fee71ef389a048c12ba10f00444c73863fddb560",
     ("components", "MadDivider"): "d9f9fda12347066f610b0cef23001cf007114bf3ca1ae4e5bbbff3120ec6a033",
     ("theme", "MadGeometryTokens"): "4b2adadeec59615709220c15dcbc8f0c062a5dbbeb2f5fa97c926878a58daebf",
     ("components", "MadRadio"): "9f5f82989b8d757ee658c7b25931ac0ae93daecebfd55319db6983700e2b9e15",
@@ -71,7 +73,10 @@ def verify(root):
     smoke_geometry = root / "smoke/geometry-desktop/src/main/kotlin/GeometryProbe.kt"
     check(hashlib.sha256(smoke_geometry.read_bytes()).hexdigest() == "22b80e1074179cc05373447201fa0288169e6690ba1d9c55f1cbc3d2853bf99e",
           "GeometryProbe: reviewed test hash mismatch")
-    print("PASS: source pins, exact ten payloads and five Desktop probes, successor coordinate and two root publication wiring checks")
+    smoke_button_family = root / "smoke/button-family-desktop/src/main/kotlin/ButtonFamilyProbe.kt"
+    check(hashlib.sha256(smoke_button_family.read_bytes()).hexdigest() == "edbb474fc0ea3b3504f3a9e97e1e24ea0be6a4d32c15fdce31d96a1cba8c67d2",
+          "ButtonFamilyProbe: reviewed test hash mismatch")
+    print("PASS: source pins, exact twelve payloads and six Desktop probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,19 @@
 # MadUIKit S1 开发预览（源码审阅）
 
-源码基线：`aba1bebcdb3c6e1b64fbbc3774e9e4d3124ef249`。仅新增显式启用的圆角、边框宽度和 `MadDivider`；新预留坐标 `0.1.0-alpha09-sdk-preview01`，未打包或发布。旧控件、主题和消费者坐标不变。
+源码基线：`3ca8365c86be96594a4a8cbe83eb81ecb4efbf5a`。仅新增 `MadActionButton` 和 `MadButtonVariant`；预留坐标 `0.1.0-alpha10-sdk-preview01`，未打包或发布。既有 `MadButton` 保持不变。
+
+## 按钮变体与加载
+
+显式选择 Primary（填充）、Secondary（描边）、Text（纯文字）或 Danger（错误色）。传入非空且已本地化的 `label`；`loadingStatus = null` 表示未加载，传入本地化非空字符串表示正在加载。加载和禁用均阻止回调；两者同时生效时仍保留加载描述和装饰性进度图。宿主应在回调中及时更新状态并负责业务防重；SDK 不自动排队或防抖。加载描述不是第二个名称；不要在 Modifier 上重复设置名称或操作。此次仅验证 Desktop Compose 与 Skia，不代表原生读屏或设备验证。
+
+```kotlin
+MadActionButton(
+    label = "保存", variant = MadButtonVariant.Primary,
+    onClick = requestSave,
+    loadingStatus = if (saving) "正在保存" else null,
+)
+```
+
 
 ## 几何角色
 
@@ -40,7 +53,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha09-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha10-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

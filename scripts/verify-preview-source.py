@@ -4,12 +4,13 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha05-sdk-preview01"
+VER = "0.1.0-alpha06-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
     ("theme", "MadSpacing"): "82f685cd96692702b9384d5f0091788739092cdb2678f2889dc55920abd7ec1d",
     ("theme", "MadTypography"): "99a0265444a19ae27da16450ba64343a67c8e8c415be4e20f3a55973cd4ac777",
     ("theme", "MadProvideTypography"): "25d57e1e48f1b494e872cc03593d83c7eb9e5337d1c07d8d7d81b33f92feb5c0",
+    ("components", "MadIcon"): "66b06cf2171c20694675ae11c455ca3a05eff5070a31c5e3202d0e81c2cef737",
     ("components", "MadSwitch"): "07fafcfb0c020779ac7667fecc9a1da0d07b6c3452372d32aea6da05ade2ee20",
     ("components", "MadText"): "78525f3473e220c69c04d01886f149b89aa1e485691f8e92ec1bf687291d14e4",
 }
@@ -54,7 +55,10 @@ def verify(root):
     smoke = root / "smoke/switch-desktop/src/main/kotlin/SwitchProbe.kt"
     check(hashlib.sha256(smoke.read_bytes()).hexdigest() == "100820d5cc1c43bad390a134fae7b8a5f55eff0870e5e6acf7f633d3bbb29788",
           "SwitchProbe: reviewed test hash mismatch")
-    print("PASS: source pins, exact five payloads, switch test, successor coordinate and two root publication wiring checks")
+    smoke_icon = root / "smoke/icon-desktop/src/main/kotlin/IconProbe.kt"
+    check(hashlib.sha256(smoke_icon.read_bytes()).hexdigest() == "6ac5819ef1414f1d768605ccdcb3047746b89a7275541aef6b3a43a6c9791c6f",
+          "IconProbe: reviewed test hash mismatch")
+    print("PASS: source pins, exact six payloads, switch and icon probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

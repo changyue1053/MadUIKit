@@ -1,6 +1,6 @@
 # Source-native S1 developer preview
 
-Source baseline: `cec44952263f528bb3775f0af63af51b4a04b621`. This source-only successor adds a controlled, labeled MadSwitch to the unchanged alpha03 SDK implementation. Alpha03 and the separate Android-only alpha04 coordinate remain unchanged. It adds no workflow, registry configuration, active consumer pin, or runtime claim. The future distinct coordinate is `0.1.0-alpha05-sdk-preview01`; do not rebuild and replace a bundle under an already adopted coordinate. These instructions do not authorize a publication or native run.
+Source baseline: `7386624ce6e3cdabf2476153861f28b8a84662fe`. This source-only successor adds caller-supplied MadIcon and MadIconButton to the unchanged alpha05 SDK implementation. Alpha03, the separate Android-only alpha04, and alpha05 remain unchanged. It adds no workflow, registry configuration, active consumer pin, or runtime claim. The future distinct coordinate is `0.1.0-alpha06-sdk-preview01`; do not rebuild and replace a bundle under an already adopted coordinate. These instructions do not authorize a publication or native run.
 
 ## Reproducible local build, when approved
 
@@ -10,7 +10,7 @@ Source baseline: `cec44952263f528bb3775f0af63af51b4a04b621`. This source-only su
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha05-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha06-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -49,7 +49,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha05-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha06-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module
@@ -84,3 +84,11 @@ Use the pinned wrapper from the root; the smoke project is separate from the SDK
     ./gradlew -p smoke/switch-desktop run --args=long
 
 The roleless and blank smoke arguments are deliberately failing controls. These tests exercise Compose Desktop semantics and pointer input, not Android, iOS, HarmonyOS, or their platform accessibility services. This source review does not ship a staged package.
+
+## MadIcon and MadIconButton Desktop contract
+
+MadIcon displays the host Painter. A null content description is decorative; a nonblank localized description names a meaningful non-action image. Unspecified tint preserves original painter colors. MadIconButton requires a nonblank localized action label and exposes one action, with a decorative child and a 48dp minimum target where parent constraints allow. The host owns actions and enabled state. No icon assets, tokens or SDK dependencies were added.
+
+    ./gradlew -p smoke/icon-desktop run
+
+Deliberately failing smoke arguments: blank-icon, blank-action, duplicate-label. Desktop proof binds the actual Compose semantics, density/target and pointer behavior, not a native platform accessibility result.

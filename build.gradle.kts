@@ -7,5 +7,5 @@ plugins {
 
 allprojects {
     group = "com.mad.maduikit"
-    version = "0.1.0-alpha05-sdk-preview01"
+    version = "0.1.0-alpha06-sdk-preview01"
 }

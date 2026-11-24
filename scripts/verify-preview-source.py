@@ -4,9 +4,10 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha10-sdk-preview01"
+VER = "0.1.0-alpha11-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
+    ("components", "MadBadge"): "7cdf29efadf616a744b6ca9a8ce6c3ab6daa5173dc324ae4d1ab2f2ba165dd66",
     ("components", "MadButton"): "7d849b90677a58443f46ea6b62b31205f71d832988a979e9e2cf4d2de1db4cf0",
     ("components", "MadActionButton"): "8211be630f24a9abe0ce5443fee71ef389a048c12ba10f00444c73863fddb560",
     ("components", "MadDivider"): "d9f9fda12347066f610b0cef23001cf007114bf3ca1ae4e5bbbff3120ec6a033",
@@ -76,7 +77,13 @@ def verify(root):
     smoke_button_family = root / "smoke/button-family-desktop/src/main/kotlin/ButtonFamilyProbe.kt"
     check(hashlib.sha256(smoke_button_family.read_bytes()).hexdigest() == "edbb474fc0ea3b3504f3a9e97e1e24ea0be6a4d32c15fdce31d96a1cba8c67d2",
           "ButtonFamilyProbe: reviewed test hash mismatch")
-    print("PASS: source pins, exact twelve payloads and six Desktop probes, successor coordinate and two root publication wiring checks")
+    smoke_badge = root / "smoke/badge-desktop/src/main/kotlin/BadgeProbe.kt"
+    check(hashlib.sha256(smoke_badge.read_bytes()).hexdigest() == "ad2639f2c879368e3fda7a5f3bd3501dd67eaaff695c71218f96055646bd1a96",
+          "BadgeProbe: reviewed test hash mismatch")
+    smoke_badge_shape = root / "smoke/badge-desktop/src/main/kotlin/ShapeAudit.kt"
+    check(hashlib.sha256(smoke_badge_shape.read_bytes()).hexdigest() == "2c804401dde8333dd8fd9429bdc7e7dc0d998d4c27d92a21760f328f1ca0d360",
+          "ShapeAudit: reviewed test hash mismatch")
+    print("PASS: source pins, exact thirteen payloads and seven Desktop probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

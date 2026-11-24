@@ -1,6 +1,16 @@
-# Source-native S1 developer preview
+# Source-native developer preview
 
-Source baseline: `3ca8365c86be96594a4a8cbe83eb81ecb4efbf5a`. This source-only successor adds `MadActionButton` and `MadButtonVariant`. The reserved coordinate is `0.1.0-alpha10-sdk-preview01`; no Maven bundle has been published. Existing `MadButton` remains unchanged.
+Source baseline: `532903a137952b81fa6ee773eff87c6cb39f5b86`. Adds the read-only `MadBadge` primitive. The reserved coordinate is `0.1.0-alpha11-sdk-preview01`; no Maven bundle has been published. Earlier APIs and consumers are unchanged.
+
+## Status and count badges
+
+A badge displays a status or caller-formatted count using theme `secondaryContainer/onSecondaryContainer` and `labelLarge`. The caller owns localization, count caps, and announcements. By default the visible text is exposed; `spokenLabel` replaces it in exposed semantics rather than adding a name. It is not clickable, dismissible, or a live region. An interactive parent owns merged labeling. Give it room to wrap and grow instead of forcing a fixed height. The corner radius is capped at 8 dp rather than increasing with wrapped height. Desktop Compose/Skia only; no native accessibility or device qualification.
+
+```kotlin
+MadBadge(text = "New")
+MadBadge(text = "12", spokenLabel = "12 unread messages")
+```
+
 
 ## Button variants and loading
 
@@ -49,7 +59,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha10-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha11-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -88,7 +98,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha10-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha11-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

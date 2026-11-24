@@ -1,6 +1,16 @@
-# MadUIKit S1 开发预览（源码审阅）
+# MadUIKit 开发预览（源码审阅）
 
-源码基线：`3ca8365c86be96594a4a8cbe83eb81ecb4efbf5a`。仅新增 `MadActionButton` 和 `MadButtonVariant`；预留坐标 `0.1.0-alpha10-sdk-preview01`，未打包或发布。既有 `MadButton` 保持不变。
+源码基线：`532903a137952b81fa6ee773eff87c6cb39f5b86`。新增只读 `MadBadge`；预留坐标 `0.1.0-alpha11-sdk-preview01`，未打包或发布。既有 API 和消费者不变。
+
+## 状态与数量徽标
+
+徽标可显示状态或数量。使用主题的 `secondaryContainer/onSecondaryContainer` 语义色和 `labelLarge` 排版；已有应用可继续用 `MadProvideTypography` 覆盖排版。数量、99+ 上限和本地化由宿主决定。默认公开可见文字；`spokenLabel` 可替换朗读文本而非叠加名称。组件无点击、关闭或主动播报；如果徽标放在可点击父项中，由父项决定合并后的描述。正常约束下允许换行和增高，请勿依赖固定高度。圆角固定上限为 8 dp，不随徽标增高而继续扩大。仅有 Desktop Compose/Skia 结果，不是原生读屏或设备认证。
+
+```kotlin
+MadBadge(text = "新内容")
+MadBadge(text = "12", spokenLabel = "12 条未读消息")
+```
+
 
 ## 按钮变体与加载
 
@@ -53,7 +63,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha10-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha11-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

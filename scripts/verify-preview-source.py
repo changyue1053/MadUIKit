@@ -4,9 +4,11 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha08-sdk-preview01"
+VER = "0.1.0-alpha09-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
+    ("components", "MadDivider"): "d9f9fda12347066f610b0cef23001cf007114bf3ca1ae4e5bbbff3120ec6a033",
+    ("theme", "MadGeometryTokens"): "4b2adadeec59615709220c15dcbc8f0c062a5dbbeb2f5fa97c926878a58daebf",
     ("components", "MadRadio"): "9f5f82989b8d757ee658c7b25931ac0ae93daecebfd55319db6983700e2b9e15",
     ("components", "MadCheckbox"): "7980507ad5b7841ce7f8121d3807084f22798fbd6d57b26341c5bc613c17e2ac",
     ("theme", "MadSpacing"): "82f685cd96692702b9384d5f0091788739092cdb2678f2889dc55920abd7ec1d",
@@ -66,7 +68,10 @@ def verify(root):
     smoke_radio = root / "smoke/radio-desktop/src/main/kotlin/RadioProbe.kt"
     check(hashlib.sha256(smoke_radio.read_bytes()).hexdigest() == "56e7375706c814b1daca142aac71a10113a01f2213a9c609253cc729a37ec1e0",
           "RadioProbe: reviewed test hash mismatch")
-    print("PASS: source pins, exact eight payloads and four Desktop probes, successor coordinate and two root publication wiring checks")
+    smoke_geometry = root / "smoke/geometry-desktop/src/main/kotlin/GeometryProbe.kt"
+    check(hashlib.sha256(smoke_geometry.read_bytes()).hexdigest() == "22b80e1074179cc05373447201fa0288169e6690ba1d9c55f1cbc3d2853bf99e",
+          "GeometryProbe: reviewed test hash mismatch")
+    print("PASS: source pins, exact ten payloads and five Desktop probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

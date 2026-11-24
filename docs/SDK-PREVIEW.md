@@ -1,6 +1,12 @@
 # Source-native S1 developer preview
 
-Source baseline: `159577f284050ab2b50d61bb859ee379b8e16ab6`. This source-only successor adds controlled single-choice selection via `MadRadio`. The reserved coordinate is `0.1.0-alpha08-sdk-preview01`; no Maven bundle has been published. Existing versions, components, and consumer pins are unchanged.
+Source baseline: `aba1bebcdb3c6e1b64fbbc3774e9e4d3124ef249`. This source-only successor adds opt-in corner radii, border-width roles and `MadDivider` without changing existing controls or theme defaults. The reserved coordinate is `0.1.0-alpha09-sdk-preview01`; no Maven bundle has been published.
+
+## Opt-in geometry roles
+
+Use `RoundedCornerShape(MadGeometryDefaults.CornerRadii[MadCornerRole.Medium].dp)` or provide `MadCornerRadii(0, 6, 10)`. Radii are ordered; zero means square. Borders are positive and ordered, with equal roles allowed; the 1/2 dp defaults are not pixel hairlines. Example: `MadDivider(borderWidths = MadBorderWidths(2, 3), role = MadBorderRole.Strong)`. The decorative divider fills bounded available width; supply a width in an unbounded parent. A tight height clips its artwork to the measured height. Desktop Skia artwork checks do not qualify native Android, iOS or HarmonyOS. Existing controls do not automatically take these roles, and the full state matrix remains pending.
+
+## Radio group
 
 Mark the group with `Modifier.selectableGroup()` and keep the active choice in one host-owned value. Only an enabled, unselected row invokes `onSelect`; selected and disabled rows do not. Supply nonblank localized labels. The row offers at least 48 × 48 dp when constraints allow. Desktop Compose semantics and touch do not establish native accessibility or device behavior.
 
@@ -30,7 +36,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha08-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha09-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -69,7 +75,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha08-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha09-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

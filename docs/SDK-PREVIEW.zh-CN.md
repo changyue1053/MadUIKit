@@ -1,6 +1,12 @@
 # MadUIKit S1 开发预览（源码审阅）
 
-源码基线：`159577f284050ab2b50d61bb859ee379b8e16ab6`。仅新增受控单选组件 `MadRadio`，新预留坐标为 `0.1.0-alpha08-sdk-preview01`，未发布 Maven 包。既有版本、组件和消费者坐标不变。
+源码基线：`aba1bebcdb3c6e1b64fbbc3774e9e4d3124ef249`。仅新增显式启用的圆角、边框宽度和 `MadDivider`；新预留坐标 `0.1.0-alpha09-sdk-preview01`，未打包或发布。旧控件、主题和消费者坐标不变。
+
+## 几何角色
+
+宿主可用 `RoundedCornerShape(MadGeometryDefaults.CornerRadii[MadCornerRole.Medium].dp)`，或传入自己的 `MadCornerRadii(0, 6, 10)`。角色按从小到大排列，0 表示直角。边框宽度必须为正且按角色排序（允许相等）；默认 Subtle/Strong 为 1/2 dp，0 不表示 hairline。例：`MadDivider(borderWidths = MadBorderWidths(2, 3), role = MadBorderRole.Strong)`。分割线无操作或名称；在有界父项中铺满可用宽度，无界时请指定宽度。限制高度后不会越界绘制。Desktop Skia 像素验证不代表 Android、iOS 或鸿蒙验收。圆角、边框目前只提供可选几何角色，不承诺旧控件统一接入或完整状态矩阵。
+
+## 单选组
 
 用 `Modifier.selectableGroup()` 标注组。宿主只保存一份当前选项；仅启用且未选中的一行触发 `onSelect`，已选中或禁用时不回调。传入本地化非空标签；约束允许时，整行至少 48 × 48 dp。Desktop 验证了 Compose 语义和触摸，不代表原生读屏或设备验收。
 
@@ -34,10 +40,10 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha08-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha09-sdk-preview01")
 ```
 
-独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角、边框和完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。
+独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。
 
 本地 Compose Desktop 冒烟测试覆盖开关角色、受控状态、禁用、长标签布局和指针点击。它不代表 TalkBack、VoiceOver 或鸿蒙原生无障碍通过，也没有三端运行截图。局部排版与间距的既有证据不等于此新坐标已编译或发布。
 

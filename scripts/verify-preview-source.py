@@ -4,9 +4,10 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha07-sdk-preview01"
+VER = "0.1.0-alpha08-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
+    ("components", "MadRadio"): "9f5f82989b8d757ee658c7b25931ac0ae93daecebfd55319db6983700e2b9e15",
     ("components", "MadCheckbox"): "7980507ad5b7841ce7f8121d3807084f22798fbd6d57b26341c5bc613c17e2ac",
     ("theme", "MadSpacing"): "82f685cd96692702b9384d5f0091788739092cdb2678f2889dc55920abd7ec1d",
     ("theme", "MadTypography"): "99a0265444a19ae27da16450ba64343a67c8e8c415be4e20f3a55973cd4ac777",
@@ -62,7 +63,10 @@ def verify(root):
     smoke_checkbox = root / "smoke/checkbox-desktop/src/main/kotlin/CheckboxProbe.kt"
     check(hashlib.sha256(smoke_checkbox.read_bytes()).hexdigest() == "cd3707a950b4399334614e6e42f3de08e3e5d0dbdf31e21d193e7ebf585cc41a",
           "CheckboxProbe: reviewed test hash mismatch")
-    print("PASS: source pins, exact seven payloads, switch, icon and checkbox probes, successor coordinate and two root publication wiring checks")
+    smoke_radio = root / "smoke/radio-desktop/src/main/kotlin/RadioProbe.kt"
+    check(hashlib.sha256(smoke_radio.read_bytes()).hexdigest() == "56e7375706c814b1daca142aac71a10113a01f2213a9c609253cc729a37ec1e0",
+          "RadioProbe: reviewed test hash mismatch")
+    print("PASS: source pins, exact eight payloads and four Desktop probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,24 @@
 # Source-native S1 developer preview
 
-Source baseline: `49f2c1f07bccaf2036ed5bdafe53d6412da45668`. This source-only successor adds controlled binary selection via `MadCheckbox` and leaves previous versions, including alpha06, unchanged. The reserved coordinate is `0.1.0-alpha07-sdk-preview01`; no Maven bundle has been published.
+Source baseline: `159577f284050ab2b50d61bb859ee379b8e16ab6`. This source-only successor adds controlled single-choice selection via `MadRadio`. The reserved coordinate is `0.1.0-alpha08-sdk-preview01`; no Maven bundle has been published. Existing versions, components, and consumer pins are unchanged.
+
+Mark the group with `Modifier.selectableGroup()` and keep the active choice in one host-owned value. Only an enabled, unselected row invokes `onSelect`; selected and disabled rows do not. Supply nonblank localized labels. The row offers at least 48 × 48 dp when constraints allow. Desktop Compose semantics and touch do not establish native accessibility or device behavior.
+
+```kotlin
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.mad.maduikit.MadRadio
+
+@Composable
+fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
+    Column(Modifier.selectableGroup()) {
+        MadRadio("Auto", selected = mode == "auto", onSelect = { onModeChange("auto") })
+        MadRadio("Manual", selected = mode == "manual", onSelect = { onModeChange("manual") })
+    }
+}
+```
 
 `MadCheckbox(label = "Save for offline reading", checked = saved, onCheckedChange = { saved = it })` changes selection only when the host updates `checked`. It does not implement tri-state or mutually exclusive selection. Supply a localized nonblank label and do not add a competing name or action through the modifier. The full row is at least 48 × 48 dp when constraints allow. Disabled never calls back. The Desktop smoke exercises Compose semantics and touch; it does not establish TalkBack, VoiceOver, Android, iOS, or HarmonyOS behavior.
 
@@ -12,7 +30,7 @@ Source baseline: `49f2c1f07bccaf2036ed5bdafe53d6412da45668`. This source-only su
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha07-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha08-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -51,7 +69,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha07-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha08-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

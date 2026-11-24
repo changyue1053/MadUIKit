@@ -1,18 +1,24 @@
 # MadUIKit
 
+> **Source-only S1 preview:** This checkout uses the distinct future coordinate
+> `0.1.0-alpha03-sdk-preview01`. No new Maven bundle has been published. This
+> checkout does not build or replace the previous `0.1.0-alpha01` preview. See
+> [isolated build and integration notes](docs/SDK-PREVIEW.md) and
+> [中文接入说明](docs/SDK-PREVIEW.zh-CN.md).
+
 Reusable Kotlin Multiplatform / Compose Multiplatform design-system components.
 This milestone contains two runtime modules, with no Figma access, generator,
 or app entry point.
 
 | Module | Public API |
 | --- | --- |
-| `maduikit-theme` | `MadTheme`, `MadColors`, `MadColorDefaults` |
-| `maduikit-components` | `MadButton`, `MadFilterTabs`, `MadFilterTab` |
+| `maduikit-theme` | `MadTheme`, `MadColors`, `MadColorDefaults`, `MadSpacing`, `MadSpacingDefaults`, `MadTypography`, `MadProvideTypography` |
+| `maduikit-components` | `MadButton`, `MadFilterTabs`, `MadFilterTab`, `MadText`, `MadTextRole` |
 
 The source configures Android (min API 23), iOS ARM64 devices and iOS ARM64
 simulators. The iOS API is Kotlin/Compose, not a Swift-facing widget kit. This
-checkpoint is an Android binary integration rehearsal: it does not publish
-iOS artifacts, a remote Maven release, or a production compatibility promise.
+branch is a source review, not evidence of a Maven publication, native app
+execution, or production compatibility.
 
 ## Build requirements
 
@@ -28,49 +34,18 @@ Multiplatform 1.9.3, Compose Material 3 1.9.0 and Android Gradle Plugin 8.11.1.
   :maduikit-theme:assembleRelease :maduikit-components:assembleRelease
 ```
 
+This is a source/build check, not a staging or consumption procedure.
+
 The common contrast test covers both default accent pairs, not custom themes
 or all states.
 
-## Stage the Android SDK for the demo
+## Preview integration
 
-From this repository's root, generate the KMP root metadata and Android
-release AARs in a filesystem Maven repository:
-
-```sh
-./gradlew \
-  :maduikit-theme:publishKotlinMultiplatformPublicationToMadUIKitLocalRepository \
-  :maduikit-theme:publishAndroidReleasePublicationToMadUIKitLocalRepository \
-  :maduikit-components:publishKotlinMultiplatformPublicationToMadUIKitLocalRepository \
-  :maduikit-components:publishAndroidReleasePublicationToMadUIKitLocalRepository
-```
-
-This writes to the sibling directory `../maduikit-maven` by default. To use a
-different directory, pass the same absolute
-`-PmaduikitStagingDir=/absolute/path/to/maduikit-maven` to the SDK and Demo
-commands. There is no remote publishing destination or `mavenLocal()`
-requirement. The stage is not a Git checkout and should not be committed.
-
-In a Kotlin/Compose consumer, configure the staging repository and add the
-root module dependency in `commonMain` so Gradle selects the appropriate
-variant:
-
-```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha01")
-```
-
-```kotlin
-@Composable
-fun ExampleAction(onConfirm: () -> Unit, canConfirm: Boolean) {
-    MadTheme {
-        MadButton(label = "Confirm", onClick = onConfirm, enabled = canConfirm)
-    }
-}
-```
-
-`MadTheme` and `MadButton` are in `com.mad.maduikit`. Callers provide
-localized labels and own business actions. For custom accents, specify both the
-accent and its contrasting text color. This sample staging command cannot
-satisfy an iOS consumer.
+For this checkout, follow the [isolated alpha03 staging and consumption notes](docs/SDK-PREVIEW.md)
+only when a local build is authorized. The previous alpha01 preview is a separate,
+already-staged artifact. If maintaining an existing alpha01 integration, use its
+original package and [pinned instructions at the alpha01 source](https://github.com/changyue1053/MadUIKit/blob/19c8c1b1fbe75b7d6a6118fdab42048948de091b/README.md),
+not this checkout or its stage.
 
 ### Controlled filter tabs
 

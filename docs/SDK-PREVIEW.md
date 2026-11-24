@@ -1,0 +1,75 @@
+# Source-native S1 developer preview
+
+Source baseline: `19c8c1b1fbe75b7d6a6118fdab42048948de091b`. This review integrates the exact four tested public source blobs. It adds no workflow, registry configuration, active consumer pin, or runtime claim. The future distinct coordinate is `0.1.0-alpha03-sdk-preview01`; do not rebuild and replace a bundle under an already adopted coordinate. These instructions do not authorize a publication or native run.
+
+## Reproducible local build, when approved
+
+- Use JDK 17, the checked-in Gradle 8.13 wrapper/checksum, Android SDK Platform 36, Kotlin/Compose compiler 2.2.21, CMP 1.9.3, AGP 8.11.1. For Apple leaves use a qualified macOS/Xcode host and record actual Xcode and SDK. Do not mix stages across hosts or earlier versions.
+- Fresh Gradle home per publisher and consumer, with approved official dependencies; use an explicit new empty filesystem stage outside the repo. Never use the default publishing directory in this rehearsal. Run source verification first: `python3 scripts/verify-preview-source.py`.
+- From the SDK checkout, publish only to the isolated filesystem Maven stage on the approved host:
+
+```sh
+set -eu
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha03-sdk-preview01.XXXXXX")"
+stage="$preview_work/maven"
+publisher_home="$preview_work/gradle-publisher"
+consumer_home="$preview_work/gradle-consumer-components"
+mkdir "$stage" "$publisher_home" "$consumer_home"
+test -z "$(ls -A "$stage")"
+python3 scripts/verify-preview-source.py
+GRADLE_USER_HOME="$publisher_home" ./gradlew --no-daemon --console=plain "-PmaduikitStagingDir=$stage" \
+  :maduikit-theme:publishKotlinMultiplatformPublicationToMadUIKitLocalRepository \
+  :maduikit-theme:publishAndroidReleasePublicationToMadUIKitLocalRepository \
+  :maduikit-components:publishKotlinMultiplatformPublicationToMadUIKitLocalRepository \
+  :maduikit-components:publishAndroidReleasePublicationToMadUIKitLocalRepository
+```
+
+A single qualified macOS producer run for Android + Apple would include each module's `publishIosSimulatorArm64PublicationToMadUIKitLocalRepository` and `publishIosArm64PublicationToMadUIKitLocalRepository` **in that same command and stage**. Do not add leaves later to an accepted stage. Record source commit, file manifest, wrapper SHA, versions, exact output hashes, SDK root metadata redirect/leaf edges, and full stage hashes before/after external consumption; reproducibility means pinned inputs and repeatable checks, not a byte-identical build promise. Stage equality is required during a test, not claimed between independent jobs.
+
+### Independent Android consumer
+
+The following is a continuation of the same shell session, not a standalone
+script. Start with an existing Android CMP/Compose consumer and its own checked-in
+wrapper. In its `settings.gradle.kts`, add this block inside
+`dependencyResolutionManagement.repositories`; leave its other official repositories in place:
+
+```kotlin
+exclusiveContent {
+    forRepository {
+        maven {
+            name = "madUIKitPreview"
+            url = uri(providers.gradleProperty("madPreviewStage").get())
+        }
+    }
+    filter { includeGroup("com.mad.maduikit") }
+}
+```
+
+In an Android-only consumer add this exact dependency in the application
+module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
+
+```kotlin
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha03-sdk-preview01")
+```
+
+Run from that independent consumer checkout, replacing `:app` with its module
+name if necessary. The explicit AndroidX opt-in applies to the consumer and
+does not depend on the producer's Gradle properties.
+
+```sh
+cd /absolute/path/to/independent-android-consumer
+GRADLE_USER_HOME="$consumer_home" ./gradlew --no-daemon --console=plain \
+  "-PmadPreviewStage=$stage" -Pandroid.useAndroidX=true :app:assembleDebug
+```
+
+For the separate theme-only arm use a fresh Gradle home created with
+`mkdir "$preview_work/gradle-consumer-theme"`; change the consumer root
+coordinate to `maduikit-theme` at the same preview version. An Android/iOS
+shared `commonMain` dependency needs the verified corresponding target leaves.
+Do not attempt to resolve iOS from the Android-only stage above.
+
+A standalone consumer should declare only the exact Maven root in each arm: theme-only and components-only (no direct theme in the latter). Resolve actual Android API/runtime and each claimed Native target separately. Confirm raw stage artifacts against the manifest, selected variants, compiler inputs and old caller compile. Add native behavior checks separately. The source-only verifier and offline Compose probe do not prove these packaging/runtime gates.
+
+## Rollback
+
+Keep each accepted stage archive immutable and separate. Revert dependency version **and** exclusive stage path to the previously verified pair, clear isolated project/Gradle homes as planned, and repeat the same caller/provenance checks. No patch to old SDK consumers or old artifacts occurred here. This describes a rollback recipe, not an exercised A/B/A rollback.

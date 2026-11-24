@@ -4,9 +4,10 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha06-sdk-preview01"
+VER = "0.1.0-alpha07-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
+    ("components", "MadCheckbox"): "7980507ad5b7841ce7f8121d3807084f22798fbd6d57b26341c5bc613c17e2ac",
     ("theme", "MadSpacing"): "82f685cd96692702b9384d5f0091788739092cdb2678f2889dc55920abd7ec1d",
     ("theme", "MadTypography"): "99a0265444a19ae27da16450ba64343a67c8e8c415be4e20f3a55973cd4ac777",
     ("theme", "MadProvideTypography"): "25d57e1e48f1b494e872cc03593d83c7eb9e5337d1c07d8d7d81b33f92feb5c0",
@@ -58,7 +59,10 @@ def verify(root):
     smoke_icon = root / "smoke/icon-desktop/src/main/kotlin/IconProbe.kt"
     check(hashlib.sha256(smoke_icon.read_bytes()).hexdigest() == "6ac5819ef1414f1d768605ccdcb3047746b89a7275541aef6b3a43a6c9791c6f",
           "IconProbe: reviewed test hash mismatch")
-    print("PASS: source pins, exact six payloads, switch and icon probes, successor coordinate and two root publication wiring checks")
+    smoke_checkbox = root / "smoke/checkbox-desktop/src/main/kotlin/CheckboxProbe.kt"
+    check(hashlib.sha256(smoke_checkbox.read_bytes()).hexdigest() == "cd3707a950b4399334614e6e42f3de08e3e5d0dbdf31e21d193e7ebf585cc41a",
+          "CheckboxProbe: reviewed test hash mismatch")
+    print("PASS: source pins, exact seven payloads, switch, icon and checkbox probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

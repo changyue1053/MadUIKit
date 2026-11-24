@@ -1,6 +1,8 @@
 # Source-native S1 developer preview
 
-Source baseline: `7386624ce6e3cdabf2476153861f28b8a84662fe`. This source-only successor adds caller-supplied MadIcon and MadIconButton to the unchanged alpha05 SDK implementation. Alpha03, the separate Android-only alpha04, and alpha05 remain unchanged. It adds no workflow, registry configuration, active consumer pin, or runtime claim. The future distinct coordinate is `0.1.0-alpha06-sdk-preview01`; do not rebuild and replace a bundle under an already adopted coordinate. These instructions do not authorize a publication or native run.
+Source baseline: `49f2c1f07bccaf2036ed5bdafe53d6412da45668`. This source-only successor adds controlled binary selection via `MadCheckbox` and leaves previous versions, including alpha06, unchanged. The reserved coordinate is `0.1.0-alpha07-sdk-preview01`; no Maven bundle has been published.
+
+`MadCheckbox(label = "Save for offline reading", checked = saved, onCheckedChange = { saved = it })` changes selection only when the host updates `checked`. It does not implement tri-state or mutually exclusive selection. Supply a localized nonblank label and do not add a competing name or action through the modifier. The full row is at least 48 × 48 dp when constraints allow. Disabled never calls back. The Desktop smoke exercises Compose semantics and touch; it does not establish TalkBack, VoiceOver, Android, iOS, or HarmonyOS behavior.
 
 ## Reproducible local build, when approved
 
@@ -10,7 +12,7 @@ Source baseline: `7386624ce6e3cdabf2476153861f28b8a84662fe`. This source-only su
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha06-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha07-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -49,7 +51,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha06-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha07-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

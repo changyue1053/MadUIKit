@@ -1,6 +1,8 @@
 # MadUIKit S1 开发预览（源码审阅）
 
-本次以 SDK 提交 `7386624ce6e3cdabf2476153861f28b8a84662fe` 为基线，保留 alpha05 的开关、排版、间距和既有控件，仅新增 App 自带 Painter 的图标与图标按钮。独立源码候选为 `0.1.0-alpha06-sdk-preview01`；既有 alpha03、Android 专用 alpha04、alpha05 和 Demo 锁定不变。**尚无可下载的 Maven 包或正式发布。**
+源码基线：`49f2c1f07bccaf2036ed5bdafe53d6412da45668`。本源码预览仅新增受控二元选择项 `MadCheckbox`，不改变 alpha06 及之前的接口或坐标；新预留坐标为 `0.1.0-alpha07-sdk-preview01`，未发布 Maven 包。
+
+`MadCheckbox(label = "离线阅读", checked = saved, onCheckedChange = { saved = it })`。只在宿主更新 `checked` 后改变选中态；不适合三态或互斥选择。提供本地化非空标签，不要在外部 Modifier 添加第二个名称或操作。约束允许时整行至少 48 × 48 dp。禁用时不触发回调。桌面 smoke 验证 Compose 语义树与触摸，不代表 TalkBack、VoiceOver、Android、iOS 或鸿蒙验收。
 
 | 能力 | 接入口 | 边界 |
 |---|---|---|
@@ -14,7 +16,7 @@
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha06-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha07-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。图标、圆角、边框和完整状态矩阵未在这一步交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

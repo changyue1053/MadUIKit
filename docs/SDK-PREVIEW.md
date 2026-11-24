@@ -1,6 +1,6 @@
 # Source-native S1 developer preview
 
-Source baseline: `19c8c1b1fbe75b7d6a6118fdab42048948de091b`. This review integrates the exact four tested public source blobs. It adds no workflow, registry configuration, active consumer pin, or runtime claim. The future distinct coordinate is `0.1.0-alpha03-sdk-preview01`; do not rebuild and replace a bundle under an already adopted coordinate. These instructions do not authorize a publication or native run.
+Source baseline: `cec44952263f528bb3775f0af63af51b4a04b621`. This source-only successor adds a controlled, labeled MadSwitch to the unchanged alpha03 SDK implementation. Alpha03 and the separate Android-only alpha04 coordinate remain unchanged. It adds no workflow, registry configuration, active consumer pin, or runtime claim. The future distinct coordinate is `0.1.0-alpha05-sdk-preview01`; do not rebuild and replace a bundle under an already adopted coordinate. These instructions do not authorize a publication or native run.
 
 ## Reproducible local build, when approved
 
@@ -10,7 +10,7 @@ Source baseline: `19c8c1b1fbe75b7d6a6118fdab42048948de091b`. This review integra
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha03-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha05-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -49,7 +49,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha03-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha05-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module
@@ -73,3 +73,14 @@ A standalone consumer should declare only the exact Maven root in each arm: them
 ## Rollback
 
 Keep each accepted stage archive immutable and separate. Revert dependency version **and** exclusive stage path to the previously verified pair, clear isolated project/Gradle homes as planned, and repeat the same caller/provenance checks. No patch to old SDK consumers or old artifacts occurred here. This describes a rollback recipe, not an exercised A/B/A rollback.
+
+## MadSwitch local Desktop contract
+
+The host owns checked and handles onCheckedChange requests. A nonblank localized label is required. The label and decorative Material switch share one semantic switch action. Long labels may wrap. No new theme tokens or SDK dependencies are added.
+
+Use the pinned wrapper from the root; the smoke project is separate from the SDK publication:
+
+    ./gradlew -p smoke/switch-desktop run
+    ./gradlew -p smoke/switch-desktop run --args=long
+
+The roleless and blank smoke arguments are deliberately failing controls. These tests exercise Compose Desktop semantics and pointer input, not Android, iOS, HarmonyOS, or their platform accessibility services. This source review does not ship a staged package.

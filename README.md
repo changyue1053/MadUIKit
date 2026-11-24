@@ -1,7 +1,7 @@
 # MadUIKit
 
 > **Source-only S1 preview:** This checkout uses the distinct future coordinate
-> `0.1.0-alpha03-sdk-preview01`. No new Maven bundle has been published. This
+> `0.1.0-alpha05-sdk-preview01`. No new Maven bundle has been published. This
 > checkout does not build or replace the previous `0.1.0-alpha01` preview. See
 > [isolated build and integration notes](docs/SDK-PREVIEW.md) and
 > [中文接入说明](docs/SDK-PREVIEW.zh-CN.md).
@@ -13,7 +13,7 @@ or app entry point.
 | Module | Public API |
 | --- | --- |
 | `maduikit-theme` | `MadTheme`, `MadColors`, `MadColorDefaults`, `MadSpacing`, `MadSpacingDefaults`, `MadTypography`, `MadProvideTypography` |
-| `maduikit-components` | `MadButton`, `MadFilterTabs`, `MadFilterTab`, `MadText`, `MadTextRole` |
+| `maduikit-components` | `MadButton`, `MadFilterTabs`, `MadFilterTab`, `MadText`, `MadTextRole`, `MadSwitch` |
 
 The source configures Android (min API 23), iOS ARM64 devices and iOS ARM64
 simulators. The iOS API is Kotlin/Compose, not a Swift-facing widget kit. This
@@ -41,7 +41,7 @@ or all states.
 
 ## Preview integration
 
-For this checkout, follow the [isolated alpha03 staging and consumption notes](docs/SDK-PREVIEW.md)
+For this checkout, follow the [isolated alpha05 staging and consumption notes](docs/SDK-PREVIEW.md)
 only when a local build is authorized. The previous alpha01 preview is a separate,
 already-staged artifact. If maintaining an existing alpha01 integration, use its
 original package and [pinned instructions at the alpha01 source](https://github.com/changyue1053/MadUIKit/blob/19c8c1b1fbe75b7d6a6118fdab42048948de091b/README.md),

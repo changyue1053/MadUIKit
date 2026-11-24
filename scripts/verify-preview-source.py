@@ -4,9 +4,10 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha11-sdk-preview01"
+VER = "0.1.0-alpha12-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
+    ("components", "MadTextField"): "0b64983dcd5d057014e84448932105e61e58b637bfdac4dfe3134546db5f51e1",
     ("components", "MadBadge"): "7cdf29efadf616a744b6ca9a8ce6c3ab6daa5173dc324ae4d1ab2f2ba165dd66",
     ("components", "MadButton"): "7d849b90677a58443f46ea6b62b31205f71d832988a979e9e2cf4d2de1db4cf0",
     ("components", "MadActionButton"): "8211be630f24a9abe0ce5443fee71ef389a048c12ba10f00444c73863fddb560",
@@ -83,7 +84,10 @@ def verify(root):
     smoke_badge_shape = root / "smoke/badge-desktop/src/main/kotlin/ShapeAudit.kt"
     check(hashlib.sha256(smoke_badge_shape.read_bytes()).hexdigest() == "2c804401dde8333dd8fd9429bdc7e7dc0d998d4c27d92a21760f328f1ca0d360",
           "ShapeAudit: reviewed test hash mismatch")
-    print("PASS: source pins, exact thirteen payloads and seven Desktop probes, successor coordinate and two root publication wiring checks")
+    smoke_textfield = root / "smoke/textfield-desktop/src/main/kotlin/FormReplay.kt"
+    check(hashlib.sha256(smoke_textfield.read_bytes()).hexdigest() == "de9c773c2375d0d4a6c63107665c239eba5c16b3dacf9328bf3df006778ad30b",
+          "FormReplay: reviewed test hash mismatch")
+    print("PASS: source pins, exact fourteen payloads and eight Desktop probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

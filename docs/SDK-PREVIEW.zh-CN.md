@@ -1,6 +1,20 @@
 # MadUIKit 开发预览（源码审阅）
 
-源码基线：`532903a137952b81fa6ee773eff87c6cb39f5b86`。新增只读 `MadBadge`；预留坐标 `0.1.0-alpha11-sdk-preview01`，未打包或发布。既有 API 和消费者不变。
+源码基线：`42a828e0c04075180bd4b00c278765051afc57cb`。新增单行受控输入 `MadTextField`；预留坐标 `0.1.0-alpha12-sdk-preview01`，未打包或发布。既有 API 和消费者不变。
+
+## 单行输入
+
+及时保存回调的完整 `TextFieldValue`，包括选区和 composing 区间；不要只取 `text` 后重建，也不应等待异步校验才回填。可另外取字符串供业务使用。标签、提示、错误由宿主本地化；错误替换提示并提供具体错误语义。禁用不能编辑或聚焦；启用的只读字段仍可聚焦和选中。圆角采用现有 Medium 角色；文本、描边和状态采用最近的 Material 主题。宿主用 `KeyboardOptions`、`KeyboardActions` 与焦点 Modifiers 编排 Next/Done。桌面验证使用真实 Compose 平台输入会话注入合成命令，不证明系统键盘、原生读屏或 Android/iOS/鸿蒙。密码、格式化、多行、富文本和平台键盘调优不在范围内。
+
+```kotlin
+var value by remember { mutableStateOf(TextFieldValue("")) }
+MadTextField(
+    label = "显示名称", value = value,
+    onValueChange = { value = it },
+    errorMessage = validationMessage, // localized or null
+)
+```
+
 
 ## 状态与数量徽标
 
@@ -63,7 +77,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha11-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha12-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

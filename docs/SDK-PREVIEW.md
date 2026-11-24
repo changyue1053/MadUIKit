@@ -1,6 +1,20 @@
 # Source-native developer preview
 
-Source baseline: `532903a137952b81fa6ee773eff87c6cb39f5b86`. Adds the read-only `MadBadge` primitive. The reserved coordinate is `0.1.0-alpha11-sdk-preview01`; no Maven bundle has been published. Earlier APIs and consumers are unchanged.
+Source baseline: `42a828e0c04075180bd4b00c278765051afc57cb`. Adds the controlled single-line `MadTextField`. The reserved coordinate is `0.1.0-alpha12-sdk-preview01`; no Maven bundle has been published. Earlier APIs and consumers are unchanged.
+
+## Controlled single-line input
+
+Store the complete `TextFieldValue` immediately, including selection and composition. Do not reconstruct it from `text` or wait on async validation before accepting the edit. Labels, help and errors are localized by the host; the specific error replaces visible help. Disabled fields cannot edit or focus; enabled read-only fields can focus and select. The existing Medium corner role is used; the nearest Material theme supplies text, outline and state colors. Configure Next/Done and focus order with `KeyboardOptions`, `KeyboardActions` and focus modifiers. Desktop uses real Compose platform input sessions with synthetic edit commands; it does not qualify an OS keyboard, native assistive technology, or Android/iOS/HarmonyOS. Passwords, transformations, multiline, rich text and platform keyboard tuning are out of scope.
+
+```kotlin
+var value by remember { mutableStateOf(TextFieldValue("")) }
+MadTextField(
+    label = "Display name", value = value,
+    onValueChange = { value = it },
+    errorMessage = validationMessage, // localized or null
+)
+```
+
 
 ## Status and count badges
 
@@ -59,7 +73,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha11-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha12-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -98,7 +112,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha11-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha12-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

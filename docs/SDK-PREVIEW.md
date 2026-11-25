@@ -1,6 +1,21 @@
 # Source-native developer preview
 
-Source baseline: `00e4650bbeef5a115ec0bcc740276dd3e06f894c`. Adds the controlled single-line `MadSearchField`. The reserved coordinate is `0.1.0-alpha16-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+Source baseline: `f891df864e0a3557f77e46eebff075ff2cb1efdb`. Adds the bottom destination bar. Source-only coordinate `0.1.0-alpha17-sdk-preview01` is reserved, not built or published. Existing alpha16 source and coordinate are unchanged; never rebuild alpha16 from this checkout.
+
+## S3 bottom navigation prototype
+
+A bottom destination bar takes 2–5 stable IDs with localized labels and decorative caller Painters. The host owns selected ID, routes/back stack and system insets. Only enabled, unselected items emit requests. Repeated activations request again until the host accepts; gate pending work in the host. A currently selected disabled item remains selected and inactive. Allocate at least 48 dp per item; labels have two visual lines and keep their complete semantic names. Desktop checks include five destinations at 240 dp (48 dp each), RTL, font scale 1.6 and long translated labels. This does not qualify keyboard Tab/arrow navigation, native screen readers or system insets, and does not finish S3.
+
+```kotlin
+MadNavigationBar(
+    items = listOf(
+        MadNavigationItem("home", homeLabel, homePainter),
+        MadNavigationItem("profile", profileLabel, profilePainter),
+    ),
+    selectedId = currentDestinationId,
+    onDestinationRequest = requestDestination,
+)
+```
 
 ## Search field
 
@@ -123,7 +138,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha16-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha17-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -162,7 +177,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha16-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha17-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

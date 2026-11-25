@@ -1,6 +1,21 @@
 # MadUIKit 开发预览（源码审阅）
 
-源码基线：`00e4650bbeef5a115ec0bcc740276dd3e06f894c`。新增受控单行 `MadSearchField`；预留坐标 `0.1.0-alpha16-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+源码基线：`f891df864e0a3557f77e46eebff075ff2cb1efdb`。仅新增底部目的地栏；预留坐标 `0.1.0-alpha17-sdk-preview01`，未打包或发布。alpha16 已有源码与坐标不变，不可用本检出重打 alpha16。
+
+## S3 底部导航原型
+
+底部目的地栏接收 2–5 个条目、稳定 ID、宿主本地化标签和装饰性 Painter。宿主拥有当前 ID、路由、返回栈和系统栏留白；SDK 只报告未选中且启用条目的意图。已选中或禁用项不回调；在宿主接受状态前，重复触发仍各发一条请求，可由宿主节流。选中的禁用项仍显示选中且不可操作。每项建议至少 48 dp 宽；标签至多两行，视觉可省略但语义保留全称。五项导航在 240 dp（每项 48 dp）、RTL、1.6 倍字体和长译文下已通过 Desktop 验证。不代表物理键盘 Tab/方向键、原生读屏、系统边距或 S3 封板验收。
+
+```kotlin
+MadNavigationBar(
+    items = listOf(
+        MadNavigationItem("home", homeLabel, homePainter),
+        MadNavigationItem("profile", profileLabel, profilePainter),
+    ),
+    selectedId = currentDestinationId,
+    onDestinationRequest = requestDestination,
+)
+```
 
 ## 搜索输入
 
@@ -127,7 +142,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha16-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha17-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

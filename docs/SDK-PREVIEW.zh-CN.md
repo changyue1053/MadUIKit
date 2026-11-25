@@ -1,6 +1,16 @@
 # MadUIKit 开发预览（源码审阅）
 
-源码基线：`35c7a39b334ec6fa35c0329a6a3e4dd64d9855dc`。新增静态容器 `MadCard`；预留坐标 `0.1.0-alpha14-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+源码基线：`40e5eaec23d960a791219e22d71f0e2c158e0c06`。新增只读 `MadAvatar`；预留坐标 `0.1.0-alpha15-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+
+## 头像
+
+宿主传入已有的 `Painter`（优先）或事先按语言格式化的单行首字，SDK 不截取姓名、不下载或打包图片。40 dp 默认空间；长方形约束中按短边绘制居中圆形。放不下的首字不裁切，显示主题色小圆点。头像不提供操作。装饰用途须显式传 `contentDescription = null`；有独立含义时传本地化名称，避免与相邻姓名重复。主题采用 `primaryContainer/onPrimaryContainer`。验证限 Desktop Compose/Skia，不代表原生读屏或设备。
+
+```kotlin
+MadAvatar(contentDescription = null, painter = photo, initials = "林")
+MadAvatar(contentDescription = "林女士的个人资料", initials = "林")
+```
+
 
 ## 内容卡片
 
@@ -103,7 +113,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha14-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha15-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

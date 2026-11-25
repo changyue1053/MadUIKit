@@ -1,6 +1,16 @@
 # Source-native developer preview
 
-Source baseline: `35c7a39b334ec6fa35c0329a6a3e4dd64d9855dc`. Adds the static `MadCard` surface. The reserved coordinate is `0.1.0-alpha14-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+Source baseline: `40e5eaec23d960a791219e22d71f0e2c158e0c06`. Adds the read-only `MadAvatar`. The reserved coordinate is `0.1.0-alpha15-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+
+## Avatars
+
+Supply a caller-owned `Painter` (preferred) or preformatted, localized one-line initials. The SDK does not parse names, fetch images or ship assets. Default allocation is 40 dp; inside a rectangle the circle is centered on the shorter side. Initials that do not fit are not clipped: a themed dot replaces them. The avatar is noninteractive. Explicitly use `contentDescription = null` for decoration; give a localized name only when it is not duplicated by nearby text. Uses `primaryContainer/onPrimaryContainer`. Desktop Compose/Skia evidence is not native accessibility or device qualification.
+
+```kotlin
+MadAvatar(contentDescription = null, painter = photo, initials = "LS")
+MadAvatar(contentDescription = "Lina’s profile", initials = "LS")
+```
+
 
 ## Content cards
 
@@ -99,7 +109,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha14-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha15-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -138,7 +148,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha14-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha15-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

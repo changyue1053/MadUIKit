@@ -1,6 +1,19 @@
 # MadUIKit 开发预览（源码审阅）
 
-源码基线：`9bc7b6aca7ae721ddf1bbb1c6ff262e6cb332146`。新增只读线性进度 `MadLinearProgress`；预留坐标 `0.1.0-alpha18-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+源码基线：`f6e48044017e5cd999618ede2e756a2f8f37a263`。新增受控确认弹窗 `MadConfirmDialog`；预留坐标 `0.1.0-alpha19-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+
+## 确认弹窗
+
+基于 CMP Material3 AlertDialog。宿主分别处理确认、取消和环境关闭请求，三个动作都不自动改 `visible`。默认 Back/Escape 请求关闭，外部点击不请求关闭；可显式配置。弹窗可见时标题、正文与两个按钮文案须本地化、非空，按钮文案须能区分。不负责导航、业务结果或焦点恢复。Desktop Compose 图层验证了 Escape、遮挡点击、三个回调和宿主关闭；不证明移动端系统返回、焦点恢复、原生读屏或其他平台。
+
+```kotlin
+MadConfirmDialog(
+    visible = showing, title = "归档项目？", message = "可稍后在设置中恢复。",
+    confirmLabel = "归档", cancelLabel = "保留项目",
+    onConfirm = requestArchive, onCancel = cancelArchive, onDismissRequest = dismissPrompt,
+)
+```
+
 
 ## 线性进度
 
@@ -152,7 +165,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha18-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha19-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

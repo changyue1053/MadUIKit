@@ -1,6 +1,19 @@
 # Source-native developer preview
 
-Source baseline: `9bc7b6aca7ae721ddf1bbb1c6ff262e6cb332146`. Adds the read-only `MadLinearProgress`. The reserved coordinate is `0.1.0-alpha18-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+Source baseline: `f6e48044017e5cd999618ede2e756a2f8f37a263`. Adds the controlled `MadConfirmDialog`. The reserved coordinate is `0.1.0-alpha19-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+
+## Confirmation dialog
+
+Uses CMP Material3 AlertDialog. Confirm, Cancel and ambient dismiss are separate requests; only the host changes `visible`. By default Back/Escape requests dismissal and outside taps do not; both policies are configurable. Visible title, message and distinct action labels must be localized and nonblank. No navigation, business result or focus-restoration policy is supplied. Actual Desktop Compose layers qualify Escape, click interception and callback routing, not native system Back, focus restoration, screen readers or mobile platforms.
+
+```kotlin
+MadConfirmDialog(
+    visible = showing, title = "Archive project?", message = "You can restore it later in settings.",
+    confirmLabel = "Archive", cancelLabel = "Keep project",
+    onConfirm = requestArchive, onCancel = cancelArchive, onDismissRequest = dismissPrompt,
+)
+```
+
 
 ## Linear progress
 
@@ -148,7 +161,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha18-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha19-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -187,7 +200,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha18-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha19-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

@@ -1,6 +1,16 @@
 # Source-native developer preview
 
-Source baseline: `1dd08e2575d0b70f15114e4942060b11a08b8eb3`. Adds the content container `MadScaffold`; source-only reserved coordinate `0.1.0-alpha27-sdk-preview01`, not packaged or published. Existing APIs are unchanged.
+Source baseline: `ba01bdf981085bfd4be9dde644a619f62ceffbe2`. Adds the read-only `MadFieldLength`; source-only reserved coordinate `0.1.0-alpha28-sdk-preview01`, not packaged or published. Existing APIs are unchanged.
+
+## Field length hint
+
+The host owns units (e.g. bytes or grapheme clusters) and supplies nonnegative counts and localized visible text. Say that the limit was exceeded in words, not color alone. Optional spokenMessage replaces rather than duplicates the semantic text; no automatic announcement. The hint never receives or alters input. Keep the complete TextFieldValue and apply host validation separately. Desktop Compose synthetic input does not qualify native IME or screen readers.
+
+```kotlin
+MadFieldLength(current = count, limit = limit, message = localizedStatus,
+    spokenMessage = localizedReading)
+```
+
 
 ## Content scaffold
 
@@ -252,7 +262,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha27-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha28-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -291,7 +301,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha27-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha28-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

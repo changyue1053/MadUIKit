@@ -1,6 +1,16 @@
 # MadUIKit 开发预览（源码审阅）
 
-源码基线：`1dd08e2575d0b70f15114e4942060b11a08b8eb3`。新增内容容器 `MadScaffold`；预留 `0.1.0-alpha27-sdk-preview01`，未打包或发布。旧 API 不变。
+源码基线：`ba01bdf981085bfd4be9dde644a619f62ceffbe2`。新增只读长度提示 `MadFieldLength`；预留 `0.1.0-alpha28-sdk-preview01`，未打包或发布。旧 API 不变。
+
+## 字段长度提示
+
+宿主决定字节、字素等计数单位，提供非负的 current/limit 和本地化可见文字。超限时须用文字明示，不能只靠错误颜色。可选 spokenMessage 替换语义文字、不叠加，不自动播报。提示只读，不接收、计数、修改或截断正在编辑的文字。应继续原样保存 TextFieldValue，再在提交时执行宿主校验。Desktop Compose 的合成输入验证不等于系统输入法或原生读屏。
+
+```kotlin
+MadFieldLength(current = count, limit = limit, message = localizedStatus,
+    spokenMessage = localizedReading)
+```
+
 
 ## 内容容器
 
@@ -256,7 +266,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha27-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha28-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

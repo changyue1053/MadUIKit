@@ -4,9 +4,10 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha27-sdk-preview01"
+VER = "0.1.0-alpha28-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
+    ("components", "MadFieldLength"): "821d56e692dcac6f022f3c79365e466e95fce0dbd263fe48d8f4bf2d1934c074",
     ("components", "MadScaffold"): "eb7afc4bd7c010ea8bb313c78dec5ca800edbdc8ad35008bc2bed6ee74894f18",
     ("components", "MadSearchFieldWithClear"): "df27be6e443bef942199fe0a6f79ad6f4e94dd286b6a50caa2528e9c08ed3e93",
     ("components", "MadDecoratedTextField"): "72bb2bd13fe33b66298c13cc00354288bf4c265677b50c98289d2650d15fef81",
@@ -147,7 +148,10 @@ def verify(root):
     smoke_scaffold = root / "smoke/scaffold-desktop/src/main/kotlin/ScaffoldProbe.kt"
     check(hashlib.sha256(smoke_scaffold.read_bytes()).hexdigest() == "264c9ea92c15c08f5239b8b09a7a348d56de42ea362440abe82d6adc395f978e",
           "ScaffoldProbe: reviewed test hash mismatch")
-    print("PASS: source pins, exact twenty-nine payloads and twenty-three Desktop probes, successor coordinate and two root publication wiring checks")
+    smoke_length = root / "smoke/field-length-desktop/src/main/kotlin/LengthProbe.kt"
+    check(hashlib.sha256(smoke_length.read_bytes()).hexdigest() == "55fc9e5809dd70793cd50c252717941adad4ee2773b125e453b790adb15a707d",
+          "LengthProbe: reviewed test hash mismatch")
+    print("PASS: source pins, exact thirty payloads and twenty-four Desktop probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

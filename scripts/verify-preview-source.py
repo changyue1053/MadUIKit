@@ -4,9 +4,10 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha15-sdk-preview01"
+VER = "0.1.0-alpha16-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
+    ("components", "MadSearchField"): "5a1aae3297705fee552c8fbc75a854a1a613011d17a87fbe14faef147c8ac1e1",
     ("components", "MadAvatar"): "fb9522aa6711b487b543a643c162451984f53bbc9d4a7f676b4e7d8d76434bae",
     ("components", "MadCard"): "9aeb2bc8ce46352a97a79057c2cd8aedc83ed3db7a90166ec338f43734067983",
     ("components", "MadListItem"): "2b6363065742ba9ffebab2e76a029cf65f0b8100de2434a138768a4177002d87",
@@ -99,7 +100,10 @@ def verify(root):
     smoke_avatar = root / "smoke/avatar-desktop/src/main/kotlin/AvatarProbe.kt"
     check(hashlib.sha256(smoke_avatar.read_bytes()).hexdigest() == "fbf667a30f99b78d6e9f3c22ae3643579b0d6ff1d410d513d98f0627dcee1cac",
           "AvatarProbe: reviewed test hash mismatch")
-    print("PASS: source pins, exact seventeen payloads and eleven Desktop probes, successor coordinate and two root publication wiring checks")
+    smoke_search = root / "smoke/search-field-desktop/src/main/kotlin/SearchReplay.kt"
+    check(hashlib.sha256(smoke_search.read_bytes()).hexdigest() == "3c69b5dc377d8661aa9d2506af3084e8a849d4321b0c75297c3078c571a9677b",
+          "SearchReplay: reviewed test hash mismatch")
+    print("PASS: source pins, exact eighteen payloads and twelve Desktop probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

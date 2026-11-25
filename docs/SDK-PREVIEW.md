@@ -1,6 +1,20 @@
 # Source-native developer preview
 
-Source baseline: `40e5eaec23d960a791219e22d71f0e2c158e0c06`. Adds the read-only `MadAvatar`. The reserved coordinate is `0.1.0-alpha15-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+Source baseline: `00e4650bbeef5a115ec0bcc740276dd3e06f894c`. Adds the controlled single-line `MadSearchField`. The reserved coordinate is `0.1.0-alpha16-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+
+## Search field
+
+Uses the existing `MadTextField`. Store the complete `TextFieldValue` immediately, including caret, selection and composition. Only the Search action in an editable state invokes the callback; typing, read-only and disabled states do not search. Localize the label, supporting hint (below the field, not an inline placeholder) and an error that replaces that hint. No networking, debounce, focus change or result state. Clear and visual submit affordances are deferred to the host, which defines edit-session boundaries. Desktop synthetic Compose input sessions are not an OS keyboard, native accessibility or mobile device qualification.
+
+```kotlin
+MadSearchField(
+    label = "Search items", value = query,
+    onValueChange = { query = it }, onSearch = { submit(query.text) },
+)
+```
+
+Rollback: use alpha15’s existing `MadTextField` with the same complete value, `KeyboardOptions(imeAction = ImeAction.Search)`, and a host-gated `KeyboardActions(onSearch = { ... })`. Use the prior pinned alpha15 source or previously retained exact artifacts; do not rebuild alpha15 from this checkout.
+
 
 ## Avatars
 
@@ -109,7 +123,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha15-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha16-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -148,7 +162,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha15-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha16-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

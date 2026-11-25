@@ -1,6 +1,20 @@
 # MadUIKit 开发预览（源码审阅）
 
-源码基线：`40e5eaec23d960a791219e22d71f0e2c158e0c06`。新增只读 `MadAvatar`；预留坐标 `0.1.0-alpha15-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+源码基线：`00e4650bbeef5a115ec0bcc740276dd3e06f894c`。新增受控单行 `MadSearchField`；预留坐标 `0.1.0-alpha16-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+
+## 搜索输入
+
+复用现有 `MadTextField`。宿主即时保存完整 `TextFieldValue`，不丢弃光标、选区和 composing 区间。仅可编辑状态下收到 Search 动作才回调；输入、只读或禁用不自动搜索。标签、字段下方帮助（不是行内占位符）和可替换帮助的错误，由宿主本地化。组件不请求网络、去抖、清焦或保存结果；暂不提供清除按钮/视觉提交按钮，宿主可单独实现并决定编辑会话边界。桌面合成 Compose 输入会话验证，不等同系统键盘/原生读屏/移动设备验收。
+
+```kotlin
+MadSearchField(
+    label = "搜索项目", value = query,
+    onValueChange = { query = it }, onSearch = { submit(query.text) },
+)
+```
+
+回退：将调用切回 alpha15 已有的 `MadTextField`，保留同一完整值，使用 `KeyboardOptions(imeAction = ImeAction.Search)` 和宿主自行负责启停的 `KeyboardActions(onSearch = { ... })`。仅使用先前的独立 alpha15 源码或已保留的原构件，不以新源码重打 alpha15。
+
 
 ## 头像
 
@@ -113,7 +127,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha15-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha16-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

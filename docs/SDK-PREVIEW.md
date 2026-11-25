@@ -1,6 +1,18 @@
 # Source-native developer preview
 
-Source baseline: `e046091ff5afbc4e1a4460aa5f7343671b4ce85a`. Adds `MadStatePanel`. The reserved coordinate is `0.1.0-alpha21-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+Source baseline: `c8a7ff600d29c185a4b748643d89ea001fa590eb`. Adds the in-flow `MadBanner`. The reserved coordinate is `0.1.0-alpha22-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+
+## In-flow banners
+
+This notice sits alongside existing content, unlike a loading/empty/error state panel. The host supplies Neutral, Warning or Error, a localized visible status label that names the severity, and a message. Color is supplementary. One optional button requests a follow-up or dismissal; only the host controls removal. Use a host Compose key when different notices share identical copy but have different identities. No popup/global queue, auto-timeout or automatic announcement. Permit vertical space for wrap. Desktop Compose/Skia only, not native accessibility.
+
+```kotlin
+MadBanner(
+    tone = MadBannerTone.Warning, statusLabel = "Warning", message = "This folder is read-only.",
+    action = MadBannerAction("Dismiss notice", dismissNotice),
+)
+```
+
 
 ## Loading, empty and error states
 
@@ -185,7 +197,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha21-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha22-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -224,7 +236,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha21-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha22-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

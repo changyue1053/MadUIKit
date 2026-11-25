@@ -1,6 +1,19 @@
 # Source-native developer preview
 
-Source baseline: `42a828e0c04075180bd4b00c278765051afc57cb`. Adds the controlled single-line `MadTextField`. The reserved coordinate is `0.1.0-alpha12-sdk-preview01`; no Maven bundle has been published. Earlier APIs and consumers are unchanged.
+Source baseline: `dee2ece216db4b36fa28400dcc767a241fc4f367`. Adds `MadListItem`. The reserved coordinate is `0.1.0-alpha13-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+
+## List rows
+
+Omit `onClick` for a static row with no action, button role, or disabled marker; `enabled` applies only to actionable rows. An actionable row exposes one whole-row action; disabling blocks callbacks. The label wraps up to two lines and support up to three, with visual ellipsis and full semantics. Localize both strings in the host. There are no custom slots, nested controls, or navigation. The host owns list state, selection, scrolling and stable keys; do not key reorderable items by their index. Scope is Desktop Compose/Skia, not native devices or assistive technology.
+
+```kotlin
+LazyColumn {
+    items(rows, key = { it.id }) { row ->
+        MadListItem(label = row.title, supportingText = row.subtitle) { open(row.id) }
+    }
+}
+```
+
 
 ## Controlled single-line input
 
@@ -73,7 +86,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha12-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha13-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -112,7 +125,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha12-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha13-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

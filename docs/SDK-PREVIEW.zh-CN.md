@@ -1,6 +1,19 @@
 # MadUIKit 开发预览（源码审阅）
 
-源码基线：`42a828e0c04075180bd4b00c278765051afc57cb`。新增单行受控输入 `MadTextField`；预留坐标 `0.1.0-alpha12-sdk-preview01`，未打包或发布。既有 API 和消费者不变。
+源码基线：`dee2ece216db4b36fa28400dcc767a241fc4f367`。新增 `MadListItem`；预留坐标 `0.1.0-alpha13-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+
+## 列表行
+
+静态行省略 `onClick`，无操作、按钮角色或“已禁用”标记；`enabled` 只在传入操作时生效。有操作时整行只有一个动作；禁用阻止回调。标题最多 2 行，补充文字最多 3 行，超出视觉省略，语义保留完整文字。文字须由宿主本地化。此版无自定义槽位、内嵌按钮或导航。宿主掌握列表、选中状态、滚动及稳定键，勿用索引作会重排的条目的键。样例只证明 Desktop Compose/Skia，不是原生设备或辅助技术验证。
+
+```kotlin
+LazyColumn {
+    items(rows, key = { it.id }) { row ->
+        MadListItem(label = row.title, supportingText = row.subtitle) { open(row.id) }
+    }
+}
+```
+
 
 ## 单行输入
 
@@ -77,7 +90,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha12-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha13-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

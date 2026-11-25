@@ -4,9 +4,10 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha12-sdk-preview01"
+VER = "0.1.0-alpha13-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
+    ("components", "MadListItem"): "2b6363065742ba9ffebab2e76a029cf65f0b8100de2434a138768a4177002d87",
     ("components", "MadTextField"): "0b64983dcd5d057014e84448932105e61e58b637bfdac4dfe3134546db5f51e1",
     ("components", "MadBadge"): "7cdf29efadf616a744b6ca9a8ce6c3ab6daa5173dc324ae4d1ab2f2ba165dd66",
     ("components", "MadButton"): "7d849b90677a58443f46ea6b62b31205f71d832988a979e9e2cf4d2de1db4cf0",
@@ -87,7 +88,10 @@ def verify(root):
     smoke_textfield = root / "smoke/textfield-desktop/src/main/kotlin/FormReplay.kt"
     check(hashlib.sha256(smoke_textfield.read_bytes()).hexdigest() == "de9c773c2375d0d4a6c63107665c239eba5c16b3dacf9328bf3df006778ad30b",
           "FormReplay: reviewed test hash mismatch")
-    print("PASS: source pins, exact fourteen payloads and eight Desktop probes, successor coordinate and two root publication wiring checks")
+    smoke_list_item = root / "smoke/list-item-desktop/src/main/kotlin/ListItemProbe.kt"
+    check(hashlib.sha256(smoke_list_item.read_bytes()).hexdigest() == "19447e66d9220abbc0e2c6554f3bb4ad36c9a82843b77414cfa3e0688ee4e5a3",
+          "ListItemProbe: reviewed test hash mismatch")
+    print("PASS: source pins, exact fifteen payloads and nine Desktop probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

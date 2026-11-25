@@ -1,6 +1,16 @@
 # MadUIKit 开发预览（源码审阅）
 
-源码基线：`1f320fe93b88328599af60a7d5435f28fb353414`。新增 `MadDecoratedTextField`；预留 `0.1.0-alpha25-sdk-preview01`，未打包或发布。旧 API 不变。
+源码基线：`40cef1105c2a05514bcb658e30fdabb74c784d53`。新增 `MadSearchFieldWithClear`；预留 `0.1.0-alpha26-sdk-preview01`，未打包或发布。旧 API 不变。
+
+## 搜索清除
+
+独立命名的清除按钮只在可编辑且内容非空时显示。宿主可拒绝；接受时显式提供空的 TextFieldValue，完成当前编辑事务。触控不会请求焦点变化，键盘用户可分别聚焦和激活；清除不触发 Search 或显式关闭键盘。152 dp 以下按钮移到下方末端，给输入框与 48 dp 按钮留足空间。不同页面身份但同名字段请用宿主稳定 key。Desktop 合成 Compose 会话及键测试不代表系统输入法、原生键盘或读屏。
+
+```kotlin
+MadSearchFieldWithClear("搜索项目", query, { query = it }, submitSearch,
+    "清除搜索", clearPainter, { query = TextFieldValue("") })
+```
+
 
 ## 装饰输入框
 
@@ -234,7 +244,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha25-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha26-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

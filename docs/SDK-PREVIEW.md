@@ -1,6 +1,16 @@
 # Source-native developer preview
 
-Source baseline: `1f320fe93b88328599af60a7d5435f28fb353414`. Adds `MadDecoratedTextField`; source-only reserved coordinate `0.1.0-alpha25-sdk-preview01`, not packaged or published. Existing APIs are unchanged.
+Source baseline: `40cef1105c2a05514bcb658e30fdabb74c784d53`. Adds `MadSearchFieldWithClear`; source-only reserved coordinate `0.1.0-alpha26-sdk-preview01`, not packaged or published. Existing APIs are unchanged.
+
+## Search with clear
+
+The independently named Clear button exists only for editable, nonempty text. The host may decline; to accept, return an empty TextFieldValue and deliberately end the composition. Touch does not request focus, while keyboard users may focus and activate the sibling. Clear does not perform Search or explicitly dismiss the keyboard. Below 152 dp the action goes at the logical end below the editor; allow space for the editor and 48 dp action. Use a host identity key for different forms with identical labels. Desktop Compose session/key tests do not qualify native IMEs or assistive technology.
+
+```kotlin
+MadSearchFieldWithClear("Search items", query, { query = it }, submitSearch,
+    "Clear query", clearPainter, { query = TextFieldValue("") })
+```
+
 
 ## Decorated input field
 
@@ -230,7 +240,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha25-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha26-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -269,7 +279,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha25-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha26-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

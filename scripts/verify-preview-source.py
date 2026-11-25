@@ -4,9 +4,10 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha19-sdk-preview01"
+VER = "0.1.0-alpha20-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
+    ("components", "MadTopAppBar"): "98c869911d3f9f118cfc9ddee1f1058b2e9c51986aefa43e4645c629c466d427",
     ("components", "MadConfirmDialog"): "515e35031a04c3328db73b756ed652735f4d6cb291704bc05ec17873e4f3d3ff",
     ("components", "MadLinearProgress"): "553a58ed22e4484486b2617e86b0946e06e44fe1c9ebfdcd69a114ded3e39c2c",
     ("components", "MadNavigationBar"): "529ddeb39dc28df32efc08645f2e44800be2571980214e2fbd9d69f57e900cd6",
@@ -115,7 +116,10 @@ def verify(root):
     smoke_confirm = root / "smoke/confirm-dialog-desktop/src/main/kotlin/ConfirmProbe.kt"
     check(hashlib.sha256(smoke_confirm.read_bytes()).hexdigest() == "7721ecf5cd24399709990a8fde8cbe4d59bc8183b6267aad23a6bdae2231843a",
           "ConfirmProbe: reviewed test hash mismatch")
-    print("PASS: source pins, exact twenty-one payloads and fifteen Desktop probes, successor coordinate and two root publication wiring checks")
+    smoke_top_bar = root / "smoke/top-bar-desktop/src/main/kotlin/TopBarProbe.kt"
+    check(hashlib.sha256(smoke_top_bar.read_bytes()).hexdigest() == "d4f511348fcc7b99dcf956c83329592ddfbe2694d1a313d3decfad391cb2bf2b",
+          "TopBarProbe: reviewed test hash mismatch")
+    print("PASS: source pins, exact twenty-two payloads and sixteen Desktop probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

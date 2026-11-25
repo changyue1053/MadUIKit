@@ -1,6 +1,18 @@
 # Source-native developer preview
 
-Source baseline: `f6e48044017e5cd999618ede2e756a2f8f37a263`. Adds the controlled `MadConfirmDialog`. The reserved coordinate is `0.1.0-alpha19-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+Source baseline: `c84f26b1d3eccecfeed337ed66ef975c95b36fed`. Adds `MadTopAppBar`. The reserved coordinate is `0.1.0-alpha20-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+
+## Top app bar
+
+Provide a title, optional logical-start navigation and optional logical-end action. Each action is a caller-owned Painter, localized name and callback; there is no unbounded actions slot. The host owns routing, system insets and any artwork mirroring. Long titles visually ellipsize to two lines but retain full heading semantics. Tight widths move actions below the title; two actions under 96 dp stack on separate lines. Supply at least 48 dp of available width for touch targets. No collapse, scroll coupling or platform focus policy. Desktop evidence is not native accessibility, insets or S3 completion.
+
+```kotlin
+MadTopAppBar(
+    title = "Workspace",
+    navigation = MadTopAppBarAction(backPainter, "Go back", onBack),
+)
+```
+
 
 ## Confirmation dialog
 
@@ -161,7 +173,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha19-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha20-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -200,7 +212,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha19-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha20-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

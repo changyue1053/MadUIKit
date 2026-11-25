@@ -1,6 +1,18 @@
 # MadUIKit 开发预览（源码审阅）
 
-源码基线：`f6e48044017e5cd999618ede2e756a2f8f37a263`。新增受控确认弹窗 `MadConfirmDialog`；预留坐标 `0.1.0-alpha19-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+源码基线：`c84f26b1d3eccecfeed337ed66ef975c95b36fed`。新增顶部栏 `MadTopAppBar`；预留坐标 `0.1.0-alpha20-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+
+## 顶部栏
+
+宿主提供标题、可选逻辑起始导航按钮及可选末端按钮。每个按钮由 Painter、本地化名称和宿主回调组成；无任意操作槽。宿主决定路由、系统边距与需要镜像的画符。长标题至多两行，视觉省略但保留完整标题语义。宽度不够时操作移到标题下方；两项且宽度小于 96 dp 时分行避免重叠。触控目标要求至少 48 dp 可用宽度。没有折叠、滚动联动或平台焦点策略。仅有 Desktop 验证，不代表原生读屏、安全区或 S3 封板。
+
+```kotlin
+MadTopAppBar(
+    title = "工作空间",
+    navigation = MadTopAppBarAction(backPainter, "返回", onBack),
+)
+```
+
 
 ## 确认弹窗
 
@@ -165,7 +177,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha19-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha20-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

@@ -1,6 +1,18 @@
 # Source-native developer preview
 
-Source baseline: `ed0fb5de3201889b58b866cb2c2f591355384317`. Adds the text-only modal `MadBottomSheet`. The reserved coordinate is `0.1.0-alpha23-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+Source baseline: `9563461ef099eb21fc35f49cb0a9cd2d0839c26d`. Adds the controlled multiline `MadTextArea`. The reserved coordinate is `0.1.0-alpha24-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+
+## Multiline input
+
+Store each complete `TextFieldValue` without rebuilding it from a string. minVisibleLines/maxVisibleLines bound the editing viewport, not the number of stored lines or characters. Leave appropriate space for label and help. A placeholder is a visual example only, not the label or essential instruction. Localized errors replace support. Default Desktop Return inserts a newline; validation, explicit submission and keyboard choices remain host-owned. No secure/password entry or custom slots. Desktop Compose evidence is not a native IME, soft keyboard, assistive-technology or device qualification.
+
+```kotlin
+MadTextArea(
+    label = "Project notes", value = notes, onValueChange = { notes = it },
+    minVisibleLines = 2, maxVisibleLines = 4,
+)
+```
+
 
 ## Bottom sheet
 
@@ -209,7 +221,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha23-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha24-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -248,7 +260,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha23-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha24-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

@@ -1,6 +1,18 @@
 # MadUIKit 开发预览（源码审阅）
 
-源码基线：`ed0fb5de3201889b58b866cb2c2f591355384317`。新增文本底部弹层 `MadBottomSheet`；预留坐标 `0.1.0-alpha23-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+源码基线：`9563461ef099eb21fc35f49cb0a9cd2d0839c26d`。新增受控多行输入 `MadTextArea`；预留坐标 `0.1.0-alpha24-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+
+## 多行输入
+
+宿主即时原样保存完整 `TextFieldValue`。minVisibleLines/maxVisibleLines 控制可见编辑高度，不限制字符或实际行数；需要足够空间承载标签和帮助。占位符仅是视觉示例，不承担读屏标签或必需说明；标题、支持文字和具体错误由宿主本地化，错误替换帮助。普通回车用于换行，显式提交/验证和键盘动作由宿主决定。此版没有安全输入、插槽或密码操作。Desktop 实测支持上述 Compose 行为，不等于原生输入法、软键盘、读屏或设备验收。
+
+```kotlin
+MadTextArea(
+    label = "项目备注", value = notes, onValueChange = { notes = it },
+    minVisibleLines = 2, maxVisibleLines = 4,
+)
+```
+
 
 ## 底部弹层
 
@@ -213,7 +225,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha23-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha24-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

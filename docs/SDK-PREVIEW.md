@@ -1,6 +1,18 @@
 # Source-native developer preview
 
-Source baseline: `c84f26b1d3eccecfeed337ed66ef975c95b36fed`. Adds `MadTopAppBar`. The reserved coordinate is `0.1.0-alpha20-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+Source baseline: `e046091ff5afbc4e1a4460aa5f7343671b4ce85a`. Adds `MadStatePanel`. The reserved coordinate is `0.1.0-alpha21-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+
+## Loading, empty and error states
+
+The host chooses Loading, Empty or Error and supplies a localized heading and optional message. Loading uses a stationary indeterminate indicator and does not show an action. Empty and Error may have one host-owned action. Nothing automatically announces, requests a network, schedules, or retries. Long text wraps: provide enough vertical room or host scrolling instead of forcing a short viewport. Desktop Compose/Skia semantics and raster evidence do not qualify native readers/devices.
+
+```kotlin
+MadStatePanel(
+    state = MadPanelState.Error, title = "Could not load projects",
+    action = MadStatePanelAction("Retry", onRetry),
+)
+```
+
 
 ## Top app bar
 
@@ -173,7 +185,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha20-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha21-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -212,7 +224,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha20-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha21-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

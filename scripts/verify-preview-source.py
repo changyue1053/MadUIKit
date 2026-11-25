@@ -4,9 +4,10 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha20-sdk-preview01"
+VER = "0.1.0-alpha21-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
+    ("components", "MadStatePanel"): "1675c9d1f9089144ca91941ea5f425097fe7e04ca0c60073fd409dc8dd2ac347",
     ("components", "MadTopAppBar"): "98c869911d3f9f118cfc9ddee1f1058b2e9c51986aefa43e4645c629c466d427",
     ("components", "MadConfirmDialog"): "515e35031a04c3328db73b756ed652735f4d6cb291704bc05ec17873e4f3d3ff",
     ("components", "MadLinearProgress"): "553a58ed22e4484486b2617e86b0946e06e44fe1c9ebfdcd69a114ded3e39c2c",
@@ -119,7 +120,10 @@ def verify(root):
     smoke_top_bar = root / "smoke/top-bar-desktop/src/main/kotlin/TopBarProbe.kt"
     check(hashlib.sha256(smoke_top_bar.read_bytes()).hexdigest() == "d4f511348fcc7b99dcf956c83329592ddfbe2694d1a313d3decfad391cb2bf2b",
           "TopBarProbe: reviewed test hash mismatch")
-    print("PASS: source pins, exact twenty-two payloads and sixteen Desktop probes, successor coordinate and two root publication wiring checks")
+    smoke_panel = root / "smoke/state-panel-desktop/src/main/kotlin/StatePanelProbe.kt"
+    check(hashlib.sha256(smoke_panel.read_bytes()).hexdigest() == "2a761752a8dc328a7fe91060be4b322139e1a239e70e9350c3f200ce3f843683",
+          "StatePanelProbe: reviewed test hash mismatch")
+    print("PASS: source pins, exact twenty-three payloads and seventeen Desktop probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

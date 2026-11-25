@@ -1,6 +1,18 @@
 # Source-native developer preview
 
-Source baseline: `40cef1105c2a05514bcb658e30fdabb74c784d53`. Adds `MadSearchFieldWithClear`; source-only reserved coordinate `0.1.0-alpha26-sdk-preview01`, not packaged or published. Existing APIs are unchanged.
+Source baseline: `1dd08e2575d0b70f15114e4942060b11a08b8eb3`. Adds the content container `MadScaffold`; source-only reserved coordinate `0.1.0-alpha27-sdk-preview01`, not packaged or published. Existing APIs are unchanged.
+
+## Content scaffold
+
+Supply a bounded parent, optional top/bottom bars, and one content slot. Top measures first, then bottom, then content receives the exact remainder (possibly zero). Each slot clips to its viewport. Put scrolling inside a slot, not around this scaffold in an unbounded layout. No router, focus, window insets, or IME policy is added; the host applies any required system padding once. Desktop evidence is not native insets or keyboard qualification.
+
+```kotlin
+MadScaffold(modifier = hostPadding,
+    topBar = { Toolbar() }, bottomBar = { Destinations() }) {
+    ScreenContent()
+}
+```
+
 
 ## Search with clear
 
@@ -240,7 +252,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha26-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha27-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -279,7 +291,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha26-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha27-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

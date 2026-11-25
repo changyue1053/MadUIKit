@@ -4,9 +4,10 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha26-sdk-preview01"
+VER = "0.1.0-alpha27-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
+    ("components", "MadScaffold"): "eb7afc4bd7c010ea8bb313c78dec5ca800edbdc8ad35008bc2bed6ee74894f18",
     ("components", "MadSearchFieldWithClear"): "df27be6e443bef942199fe0a6f79ad6f4e94dd286b6a50caa2528e9c08ed3e93",
     ("components", "MadDecoratedTextField"): "72bb2bd13fe33b66298c13cc00354288bf4c265677b50c98289d2650d15fef81",
     ("components", "MadTextArea"): "5435a1c9874e965bdcc502adde0c1c107b1119f3e62249e919ac505e90a07737",
@@ -143,7 +144,10 @@ def verify(root):
     smoke_clear = root / "smoke/search-clear-desktop/src/main/kotlin/ClearProbe.kt"
     check(hashlib.sha256(smoke_clear.read_bytes()).hexdigest() == "0509c19d18d7e1139d3a21e38f05775f412f997838f7e22ddd18c6663bf51922",
           "ClearProbe: reviewed test hash mismatch")
-    print("PASS: source pins, exact twenty-eight payloads and twenty-two Desktop probes, successor coordinate and two root publication wiring checks")
+    smoke_scaffold = root / "smoke/scaffold-desktop/src/main/kotlin/ScaffoldProbe.kt"
+    check(hashlib.sha256(smoke_scaffold.read_bytes()).hexdigest() == "264c9ea92c15c08f5239b8b09a7a348d56de42ea362440abe82d6adc395f978e",
+          "ScaffoldProbe: reviewed test hash mismatch")
+    print("PASS: source pins, exact twenty-nine payloads and twenty-three Desktop probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

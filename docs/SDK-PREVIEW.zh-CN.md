@@ -1,6 +1,19 @@
 # MadUIKit 开发预览（源码审阅）
 
-源码基线：`dee2ece216db4b36fa28400dcc767a241fc4f367`。新增 `MadListItem`；预留坐标 `0.1.0-alpha13-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+源码基线：`35c7a39b334ec6fa35c0329a6a3e4dd64d9855dc`。新增静态容器 `MadCard`；预留坐标 `0.1.0-alpha14-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+
+## 内容卡片
+
+卡片提供静态容器和受裁剪的 Column 内容槽。由宿主决定宽高、内部留白、内容及子控件操作；组件不自行整卡点击、合并语义或绘制阴影。使用最近主题的 `surfaceContainer`、`onSurface` 和 `outlineVariant`；内容色只作用于卡片内部。默认 Medium 圆角、无描边；可用现有几何角色启用描边。描边画在卡片区域内，必要时请留内边距。仅有 Desktop Compose/Skia 证明，不代表 Android/iOS/鸿蒙。
+
+```kotlin
+MadCard(modifier = Modifier.fillMaxWidth(), borderRole = MadBorderRole.Subtle) {
+    Column(Modifier.padding(MadSpacingDefaults.Standard.largeDp.dp)) {
+        MadText("账户状态", role = MadTextRole.Title)
+    }
+}
+```
+
 
 ## 列表行
 
@@ -90,7 +103,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha13-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha14-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

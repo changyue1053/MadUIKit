@@ -1,6 +1,19 @@
 # Source-native developer preview
 
-Source baseline: `dee2ece216db4b36fa28400dcc767a241fc4f367`. Adds `MadListItem`. The reserved coordinate is `0.1.0-alpha13-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+Source baseline: `35c7a39b334ec6fa35c0329a6a3e4dd64d9855dc`. Adds the static `MadCard` surface. The reserved coordinate is `0.1.0-alpha14-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+
+## Content cards
+
+A static surface with a clipped Column slot. The host owns size, inner padding, content and child actions. It does not merge semantics, add a whole-card action or draw shadows. The nearest theme supplies `surfaceContainer`, `onSurface` (scoped to the slot) and `outlineVariant`. Defaults to Medium corners and no border; opt into one of the existing border roles. The border overlays the inside edge, so pad the slot if necessary. Evidence is Desktop Compose/Skia, not Android/iOS/HarmonyOS.
+
+```kotlin
+MadCard(modifier = Modifier.fillMaxWidth(), borderRole = MadBorderRole.Subtle) {
+    Column(Modifier.padding(MadSpacingDefaults.Standard.largeDp.dp)) {
+        MadText("Account status", role = MadTextRole.Title)
+    }
+}
+```
+
 
 ## List rows
 
@@ -86,7 +99,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha13-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha14-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -125,7 +138,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha13-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha14-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

@@ -1,6 +1,16 @@
 # Source-native developer preview
 
-Source baseline: `f891df864e0a3557f77e46eebff075ff2cb1efdb`. Adds the bottom destination bar. Source-only coordinate `0.1.0-alpha17-sdk-preview01` is reserved, not built or published. Existing alpha16 source and coordinate are unchanged; never rebuild alpha16 from this checkout.
+Source baseline: `9bc7b6aca7ae721ddf1bbb1c6ff262e6cb332146`. Adds the read-only `MadLinearProgress`. The reserved coordinate is `0.1.0-alpha18-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+
+## Linear progress
+
+Pass a finite fraction in 0–1 for determinate progress: 0 paints only the track and 1 paints full fill. Null paints two stationary segments and has indeterminate semantics, not a percentage. Neither mode animates or reads a system motion preference. The host owns scheduling and announcement policy; no callback is emitted. Use a localized `label` to name the operation when nearby content does not already do so. Fill follows RTL. Custom `primary/secondaryContainer` colors must remain distinguishable. Desktop illustration is not native screen-reader or platform settings qualification.
+
+```kotlin
+MadLinearProgress(fraction = uploadFraction, label = "Uploading photos")
+// uploadFraction: Float?; null means an unknown amount.
+```
+
 
 ## S3 bottom navigation prototype
 
@@ -138,7 +148,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha17-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha18-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -177,7 +187,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha17-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha18-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

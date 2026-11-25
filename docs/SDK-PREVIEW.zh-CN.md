@@ -1,6 +1,16 @@
 # MadUIKit 开发预览（源码审阅）
 
-源码基线：`f891df864e0a3557f77e46eebff075ff2cb1efdb`。仅新增底部目的地栏；预留坐标 `0.1.0-alpha17-sdk-preview01`，未打包或发布。alpha16 已有源码与坐标不变，不可用本检出重打 alpha16。
+源码基线：`9bc7b6aca7ae721ddf1bbb1c6ff262e6cb332146`。新增只读线性进度 `MadLinearProgress`；预留坐标 `0.1.0-alpha18-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+
+## 线性进度
+
+传入有限且在 0–1 之间的比例确定进度，0 只显示轨道，1 为全填充。未知进度传 `null`，用两段静态图案区分，不代表百分比。组件不播放动画，因此不读系统减弱动态设置；也不做业务调度、增量播报或回调。只在相邻内容没有命名时传入本地化 `label`；如同页有多个任务，应给各自明确名称。填充随 RTL 镜像；主题采用 primary/secondaryContainer，自定义主题需保证区分度。仅 Desktop 已验证，不代表原生读屏或平台设置。
+
+```kotlin
+MadLinearProgress(fraction = uploadFraction, label = "上传照片")
+// uploadFraction: Float?; null means an unknown amount.
+```
+
 
 ## S3 底部导航原型
 
@@ -142,7 +152,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha17-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha18-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

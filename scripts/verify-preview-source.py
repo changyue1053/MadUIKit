@@ -4,9 +4,10 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha17-sdk-preview01"
+VER = "0.1.0-alpha18-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
+    ("components", "MadLinearProgress"): "553a58ed22e4484486b2617e86b0946e06e44fe1c9ebfdcd69a114ded3e39c2c",
     ("components", "MadNavigationBar"): "529ddeb39dc28df32efc08645f2e44800be2571980214e2fbd9d69f57e900cd6",
     ("components", "MadSearchField"): "5a1aae3297705fee552c8fbc75a854a1a613011d17a87fbe14faef147c8ac1e1",
     ("components", "MadAvatar"): "fb9522aa6711b487b543a643c162451984f53bbc9d4a7f676b4e7d8d76434bae",
@@ -107,7 +108,10 @@ def verify(root):
     smoke_navigation = root / "smoke/navigation-desktop/src/main/kotlin/NavigationProbe.kt"
     check(hashlib.sha256(smoke_navigation.read_bytes()).hexdigest() == "c4b428b105d02a066a14c198c446fe118d6b1fb3e53845194faa5b1a7ce2afeb",
           "NavigationProbe: reviewed test hash mismatch")
-    print("PASS: source pins, exact nineteen payloads and thirteen Desktop probes, successor coordinate and two root publication wiring checks")
+    smoke_progress = root / "smoke/progress-desktop/src/main/kotlin/ProgressProbe.kt"
+    check(hashlib.sha256(smoke_progress.read_bytes()).hexdigest() == "579df3b5746b42b73e6eed896f865eb5c1b95cb3cc7a4e98e4ed50cf256a5a93",
+          "ProgressProbe: reviewed test hash mismatch")
+    print("PASS: source pins, exact twenty payloads and fourteen Desktop probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,15 @@
 # Source-native developer preview
 
-Source baseline: `9563461ef099eb21fc35f49cb0a9cd2d0839c26d`. Adds the controlled multiline `MadTextArea`. The reserved coordinate is `0.1.0-alpha24-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+Source baseline: `1f320fe93b88328599af60a7d5435f28fb353414`. Adds `MadDecoratedTextField`; source-only reserved coordinate `0.1.0-alpha25-sdk-preview01`, not packaged or published. Existing APIs are unchanged.
+
+## Decorated input field
+
+Caller-provided start/end Painters are passive and clipped to 24 dp; they add no action, focus or accessibility name of their own. Tapping their area may focus the editor. Below 144 dp no icon is shown; from 144 dp up to 200 dp only one appears, preferring logical start. Example placeholders never replace the label, help or error. Retain complete TextFieldValue. Use an accessible sibling for a separate action. Desktop Compose only, not system IME or native screen-reader qualification.
+
+```kotlin
+MadDecoratedTextField("Name", value, { value = it }, placeholder = "Example", leading = icon)
+```
+
 
 ## Multiline input
 
@@ -221,7 +230,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha24-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha25-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -260,7 +269,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha24-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha25-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module

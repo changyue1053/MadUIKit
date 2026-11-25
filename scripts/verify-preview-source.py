@@ -4,9 +4,10 @@ import hashlib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-VER = "0.1.0-alpha22-sdk-preview01"
+VER = "0.1.0-alpha23-sdk-preview01"
 PKG = "src/commonMain/kotlin/com/mad/maduikit"
 FILES = {
+    ("components", "MadBottomSheet"): "9428dcd9107e1f986d973981327b0de7760856a49a60ed7a3768263bbb212af9",
     ("components", "MadBanner"): "92e9b7b2f7b870104f7ccd212f48f9ff99d6a64c5fca36064bfa979ceda2f93a",
     ("components", "MadStatePanel"): "1675c9d1f9089144ca91941ea5f425097fe7e04ca0c60073fd409dc8dd2ac347",
     ("components", "MadTopAppBar"): "98c869911d3f9f118cfc9ddee1f1058b2e9c51986aefa43e4645c629c466d427",
@@ -127,7 +128,10 @@ def verify(root):
     smoke_banner = root / "smoke/banner-desktop/src/main/kotlin/BannerProbe.kt"
     check(hashlib.sha256(smoke_banner.read_bytes()).hexdigest() == "6c11a16e3e11bee57bc693565253b7b8db56e05485020bc1f6f1f4566400d5d0",
           "BannerProbe: reviewed test hash mismatch")
-    print("PASS: source pins, exact twenty-four payloads and eighteen Desktop probes, successor coordinate and two root publication wiring checks")
+    smoke_sheet = root / "smoke/bottom-sheet-desktop/src/main/kotlin/BottomSheetProbe.kt"
+    check(hashlib.sha256(smoke_sheet.read_bytes()).hexdigest() == "70f74b7e4d082adbccc05fddeb77f2f9691c662c637ea6632a9a243833753888",
+          "BottomSheetProbe: reviewed test hash mismatch")
+    print("PASS: source pins, exact twenty-five payloads and nineteen Desktop probes, successor coordinate and two root publication wiring checks")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,18 @@
 # MadUIKit 开发预览（源码审阅）
 
-源码基线：`c8a7ff600d29c185a4b748643d89ea001fa590eb`。新增页内提示条 `MadBanner`；预留坐标 `0.1.0-alpha22-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+源码基线：`ed0fb5de3201889b58b866cb2c2f591355384317`。新增文本底部弹层 `MadBottomSheet`；预留坐标 `0.1.0-alpha23-sdk-preview01`，未打包或发布。既有 API、依赖、消费者坐标不变。
+
+## 底部弹层
+
+仅提供标题、正文和一个本地化关闭按钮。关闭按钮只发出请求，宿主自己更新 `visible`。不提供拖动或半展开状态；组件关闭了返回与外部点击触发关闭的配置。内容从底部展开、最高 480 dp，正文可滚动；须保留足够高的宿主区域以容纳标题和固定关闭按钮。弹层保留固定版本 Material3 的默认内容边距，这不等于原生安全区或键盘验收。Desktop 原生 Compose 图层测试了 Escape、遮挡点击和正文轮滚。未验收系统返回、触摸手势、屏幕阅读器、焦点恢复、安全区或键盘；不代表移动端可用。
+
+```kotlin
+MadBottomSheet(
+    visible = showingDetails, title = "传输详情", message = detailText,
+    closeLabel = "关闭", onCloseRequest = { showingDetails = false },
+)
+```
+
 
 ## 页内提示条
 
@@ -201,7 +213,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 如已取得本预览坐标的**经校验的独立 Maven 暂存目录**，在宿主的 `dependencyResolutionManagement.repositories` 中把 `com.mad.maduikit` 独占指向此目录（`exclusiveContent`），保留 `google()` / `mavenCentral()` 给其他依赖。组件调用用：
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha22-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha23-sdk-preview01")
 ```
 
 独立 Android 消费者须设置 `android.useAndroidX=true`（消费者的 `gradle.properties`，或 Gradle 命令的 `-Pandroid.useAndroidX=true`）；生产者配置不会传递给消费者。只需主题与排版类型时可换成 `maduikit-theme`；通过 components 的传递依赖也可读取主题。不要使用 `mavenLocal()`、单独拷贝 AAR 或混用不同版本目录。Android/iOS 的目标资格分别核对，KLIB 存在不代表应用已在设备运行。已提供接收 App 自有 Painter 的 `MadIcon` 和 `MadIconButton`，不内置图标素材。圆角与边框宽度已提供显式可选角色，旧控件接入及完整状态矩阵尚未交付。构建与回退见 [SDK-PREVIEW.md](SDK-PREVIEW.md)。

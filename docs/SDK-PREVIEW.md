@@ -1,6 +1,18 @@
 # Source-native developer preview
 
-Source baseline: `c8a7ff600d29c185a4b748643d89ea001fa590eb`. Adds the in-flow `MadBanner`. The reserved coordinate is `0.1.0-alpha22-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+Source baseline: `ed0fb5de3201889b58b866cb2c2f591355384317`. Adds the text-only modal `MadBottomSheet`. The reserved coordinate is `0.1.0-alpha23-sdk-preview01`; no Maven bundle has been published. Earlier APIs, dependencies, and consumers are unchanged.
+
+## Bottom sheet
+
+The host supplies a localized title, message and one explicit close label. The action requests closure; only the host clears `visible`. No drag or partially expanded state is exposed; Back/outside dismissal is configured off. Body content scrolls in the bounded expanded sheet (up to 480 dp) and the close action stays fixed. Give the heading and button adequate vertical space. The sheet uses the pinned Material3 default content insets; that is not a native safe-area or keyboard measurement. Desktop Compose layer tests cover Escape, click blocking and body wheel scrolling; native Back, touch gestures, screen readers, focus restoration, insets, keyboard avoidance and mobile qualification are not established.
+
+```kotlin
+MadBottomSheet(
+    visible = showingDetails, title = "Transfer details", message = detailText,
+    closeLabel = "Close", onCloseRequest = { showingDetails = false },
+)
+```
+
 
 ## In-flow banners
 
@@ -197,7 +209,7 @@ fun DisplayOptions(mode: String, onModeChange: (String) -> Unit) {
 
 ```sh
 set -eu
-preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha22-sdk-preview01.XXXXXX")"
+preview_work="$(mktemp -d "${TMPDIR:-/tmp}/mad-alpha23-sdk-preview01.XXXXXX")"
 stage="$preview_work/maven"
 publisher_home="$preview_work/gradle-publisher"
 consumer_home="$preview_work/gradle-consumer-components"
@@ -236,7 +248,7 @@ In an Android-only consumer add this exact dependency in the application
 module (in `androidMain.dependencies` for an Android-only stage used by a KMP app):
 
 ```kotlin
-implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha22-sdk-preview01")
+implementation("com.mad.maduikit:maduikit-components:0.1.0-alpha23-sdk-preview01")
 ```
 
 Run from that independent consumer checkout, replacing `:app` with its module
